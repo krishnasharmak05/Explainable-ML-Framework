@@ -1,0 +1,100 @@
+# Configuration for Dataset-Agnostic ML Framework (Phases 1-6)
+
+data:
+  # Path to dataset directory or single CSV/Parquet file
+  dataset_path: "./dataset/"
+  # Target column name in the dataset
+  target_column: "Label"
+  # Classification mode: "binary" or "multiclass"
+  classification_mode: "binary"
+  # Benign/normal label string for binary classification (case-insensitive)
+  benign_label: "BENIGN"
+  # Train / test split ratio
+  test_size: 0.2
+  # Random seed for reproducibility
+  random_state: 42
+
+preprocessing:
+  # Strategy for missing value imputation: "mean" or "median" (Equation 1)
+  imputation_strategy: "mean"
+  # Absolute skewness threshold above which log(X + 1) transformation is applied (Equation 2)
+  skewness_threshold: 1.0
+  # Min-Max scaling range (Equation 3)
+  scaling_range: [0.0, 1.0]
+  # Columns to exclude from feature transformation
+  drop_columns: []
+
+feature_selection:
+  # Number of top features to select using Mutual Information (Algorithm 1)
+  top_k: 15
+  # Number of neighbors for MI estimation
+  n_neighbors: 3
+  # Subsample size for MI calculation if dataset is large (0 or null for full)
+  sample_size: 50000
+
+modeling:
+  # Number of folds for cross-validation (Algorithm 2)
+  cv_folds: 5
+  # Models to train ("random_forest", "xgboost", "lightgbm")
+  active_models:
+    - "random_forest"
+    - "xgboost"
+    - "lightgbm"
+  random_forest:
+    n_estimators: 100
+    max_depth: 15
+    random_state: 42
+    n_jobs: -1
+  xgboost:
+    n_estimators: 100
+    max_depth: 6
+    learning_rate: 0.1
+    random_state: 42
+    eval_metric: "logloss"
+    n_jobs: -1
+  lightgbm:
+    n_estimators: 100
+    max_depth: 6
+    learning_rate: 0.1
+    random_state: 42
+    n_jobs: -1
+    verbose: -1
+
+benchmarking:
+  # Phase 4: Track latency, throughput, peak memory, and disk size
+  enabled: true
+  n_repeats: 3
+
+calibration:
+  # Phase 4: Probability Calibration (Brier Score, ECE, Platt scaling, Isotonic)
+  enabled: true
+  methods:
+    - "sigmoid"
+    - "isotonic"
+  n_bins: 10
+
+explainability:
+  # Phase 5: SHAP explanations and Explanation Stability
+  enabled: true
+  max_eval_samples: 300
+  stability:
+    enabled: true
+    top_k: 10
+
+robustness:
+  # Phase 6: Controlled perturbation benchmarks
+  enabled: true
+  noise_levels:
+    - 0.01
+    - 0.05
+    - 0.10
+    - 0.20
+  missingness_rates:
+    - 0.05
+    - 0.10
+    - 0.20
+
+output:
+  output_dir: "./outputs"
+  models_dir: "./outputs/models"
+  reports_dir: "./outputs/reports"
