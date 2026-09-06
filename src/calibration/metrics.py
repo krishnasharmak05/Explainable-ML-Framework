@@ -85,9 +85,11 @@ def compute_calibration_curve(
     y_true: np.ndarray,
     y_prob: np.ndarray,
     n_bins: int = 10,
+    strategy: str = "uniform",
 ) -> Dict[str, np.ndarray]:
     """
     Computes empirical accuracy and average confidence across bins for reliability curves.
+    Omits empty bins to avoid artificial zero-fraction oscillation.
     """
     y_true_arr = np.asarray(y_true)
     y_prob_arr = np.asarray(y_prob)
@@ -97,28 +99,35 @@ def compute_calibration_curve(
     else:
         probs = y_prob_arr.ravel()
 
-    bin_boundaries = np.linspace(0.0, 1.0, n_bins + 1)
+    probs = np.clip(probs, 0.0, 1.0)
+
+    if strategy == "quantile":
+        quantiles = np.linspace(0.0, 1.0, n_bins + 1)
+        bin_boundaries = np.percentile(probs, quantiles * 100)
+        bin_boundaries = np.unique(bin_boundaries)
+        if len(bin_boundaries) <= 1:
+            bin_boundaries = np.linspace(0.0, 1.0, n_bins + 1)
+    else:
+        bin_boundaries = np.linspace(0.0, 1.0, n_bins + 1)
+
     bin_accs = []
     bin_confs = []
     bin_counts = []
 
-    for i in range(n_bins):
+    for i in range(len(bin_boundaries) - 1):
         bin_lower = bin_boundaries[i]
         bin_upper = bin_boundaries[i + 1]
 
-        if i == n_bins - 1:
+        if i == len(bin_boundaries) - 2:
             in_bin = (probs >= bin_lower) & (probs <= bin_upper)
         else:
             in_bin = (probs >= bin_lower) & (probs < bin_upper)
 
-        if np.any(in_bin):
+        n_in_bin = int(np.sum(in_bin))
+        if n_in_bin > 0:
             bin_accs.append(float(np.mean(y_true_arr[in_bin])))
             bin_confs.append(float(np.mean(probs[in_bin])))
-            bin_counts.append(int(np.sum(in_bin)))
-        else:
-            bin_accs.append(0.0)
-            bin_confs.append((bin_lower + bin_upper) / 2.0)
-            bin_counts.append(0)
+            bin_counts.append(n_in_bin)
 
     return {
         "mean_predicted_value": np.array(bin_confs),

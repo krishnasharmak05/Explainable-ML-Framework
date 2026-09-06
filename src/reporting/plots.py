@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -145,32 +145,83 @@ def plot_confusion_matrices(
 
 
 def plot_calibration_curves(
-    curves_dict: Dict[str, Dict[str, np.ndarray]],
+    curves_dict: Dict[str, Any],
     output_path: Union[str, Path],
 ) -> None:
-    """Plots probability calibration reliability diagrams."""
+    """
+    Plots publication-quality probability calibration reliability diagrams.
+    Supports either single-level {model: curve} or multi-level {model: {method: curve}}.
+    Omits empty-bin artifacts and ensures sorted, monotonic visualization.
+    """
     _setup_plot_style()
     output_path = Path(output_path)
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
-    fig, ax = plt.subplots(figsize=(7, 6))
-    ax.plot([0, 1], [0, 1], "k--", lw=1.5, label="Perfect Calibration")
+    is_nested = any(isinstance(v, dict) and "mean_predicted_value" not in v for v in curves_dict.values())
 
-    for name, curve in curves_dict.items():
-        ax.plot(
-            curve["mean_predicted_value"],
-            curve["fraction_of_positives"],
-            "s-",
-            lw=2,
-            label=name,
-        )
+    if is_nested:
+        n_models = len(curves_dict)
+        fig, axes = plt.subplots(1, n_models, figsize=(5.5 * n_models, 4.8), dpi=300, sharey=True)
+        if n_models == 1:
+            axes = [axes]
 
-    ax.set_title("Probability Calibration (Reliability Diagram)")
-    ax.set_xlabel("Mean Predicted Probability")
-    ax.set_ylabel("Fraction of Positives")
-    ax.set_ylim(-0.05, 1.05)
-    ax.set_xlim(-0.05, 1.05)
-    ax.legend(loc="lower right", frameon=True)
+        method_colors = {
+            "Uncalibrated": "#e63946",
+            "Sigmoid": "#457b9d",
+            "Isotonic": "#2a9d8f",
+        }
+
+        for ax, (model_name, methods) in zip(axes, curves_dict.items()):
+            ax.plot([0, 1], [0, 1], "k--", lw=1.5, label="Perfect Calibration", zorder=1)
+            for method_name, curve in methods.items():
+                x = np.asarray(curve["mean_predicted_value"])
+                y = np.asarray(curve["fraction_of_positives"])
+                if len(x) > 0:
+                    order = np.argsort(x)
+                    color = method_colors.get(method_name, None)
+                    ax.plot(
+                        x[order],
+                        y[order],
+                        "s-",
+                        lw=2,
+                        ms=5,
+                        label=method_name,
+                        color=color,
+                        zorder=2,
+                    )
+            ax.set_title(f"{model_name}\nReliability Diagram", fontweight="bold", fontsize=11)
+            ax.set_xlabel("Mean Predicted Probability", fontsize=10)
+            ax.set_ylabel("Fraction of Positives", fontsize=10)
+            ax.set_ylim(-0.02, 1.02)
+            ax.set_xlim(-0.02, 1.02)
+            ax.grid(alpha=0.3, linestyle=":")
+            ax.legend(loc="lower right", frameon=True, fontsize=9)
+    else:
+        fig, ax = plt.subplots(figsize=(7, 6), dpi=300)
+        ax.plot([0, 1], [0, 1], "k--", lw=1.5, label="Perfect Calibration", zorder=1)
+
+        for name, curve in curves_dict.items():
+            x = np.asarray(curve["mean_predicted_value"])
+            y = np.asarray(curve["fraction_of_positives"])
+            if len(x) > 0:
+                order = np.argsort(x)
+                ax.plot(
+                    x[order],
+                    y[order],
+                    "s-",
+                    lw=2,
+                    ms=5,
+                    label=name,
+                    zorder=2,
+                )
+
+        ax.set_title("Probability Calibration (Reliability Diagram)", fontweight="bold")
+        ax.set_xlabel("Mean Predicted Probability")
+        ax.set_ylabel("Fraction of Positives")
+        ax.set_ylim(-0.02, 1.02)
+        ax.set_xlim(-0.02, 1.02)
+        ax.grid(alpha=0.3, linestyle=":")
+        ax.legend(loc="lower right", frameon=True)
 
     plt.tight_layout()
     plt.savefig(output_path)

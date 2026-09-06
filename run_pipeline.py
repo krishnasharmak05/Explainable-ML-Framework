@@ -253,6 +253,7 @@ def run():
         )
 
         all_cal_reports = []
+        fitted_calibrators = {}
         for model_name in cfg.modeling.active_models:
             base_model = training_results.get_model(model_name)
             calibrator = ModelCalibrator(n_bins=cfg.calibration.n_bins)
@@ -262,6 +263,7 @@ def run():
                 y_val=y_cal_val,
                 methods=cfg.calibration.methods,
             )
+            fitted_calibrators[model_name] = calibrator
             cal_reports = calibrator.evaluate(
                 base_estimator=base_model,
                 X_eval=X_test_selected,
@@ -451,7 +453,21 @@ def run():
 
     # Calibration curves plot
     from src.calibration.metrics import compute_calibration_curve
-    cal_curves = {m: compute_calibration_curve(y_test, models_probs_dict[m]) for m in active_m}
+    cal_curves = {}
+    for m in active_m:
+        cal_curves[m] = {
+            "Uncalibrated": compute_calibration_curve(y_test, models_probs_dict[m], n_bins=10, strategy="quantile"),
+        }
+        if "fitted_calibrators" in locals() and m in fitted_calibrators:
+            cal = fitted_calibrators[m]
+            for method in ["sigmoid", "isotonic"]:
+                try:
+                    cal_probs = cal.predict_proba(method, X_test_selected)
+                    cal_curves[m][method.capitalize()] = compute_calibration_curve(
+                        y_test, cal_probs, n_bins=10, strategy="quantile"
+                    )
+                except Exception:
+                    pass
     plot_calibration_curves(cal_curves, plots_dir / "calibration_curves.png")
 
     # Robustness plot
