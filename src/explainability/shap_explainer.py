@@ -63,15 +63,26 @@ class ShapExplainer:
         else:
             background = X_eval
 
-        # Initialize appropriate explainer
-        try:
-            self.explainer = shap.TreeExplainer(raw_model, data=background)
-            output_space = "TreeExplainer (margin / log-odds)"
-        except Exception:
-            self.explainer = shap.Explainer(raw_model, background)
-            output_space = "General Explainer"
+        # Initialize appropriate explainer with robust fallbacks
+        shap_vals = None
+        output_space = "TreeExplainer"
 
-        shap_vals = self.explainer(X_eval)
+        # 1. Try path-dependent TreeExplainer (standard for tree ensembles: RF, XGBoost, LightGBM)
+        try:
+            self.explainer = shap.TreeExplainer(raw_model, feature_perturbation="tree_path_dependent")
+            shap_vals = self.explainer(X_eval)
+            output_space = "TreeExplainer (tree_path_dependent)"
+        except Exception:
+            # 2. Try interventional TreeExplainer with background sample
+            try:
+                self.explainer = shap.TreeExplainer(raw_model, data=background)
+                shap_vals = self.explainer(X_eval)
+                output_space = "TreeExplainer (interventional)"
+            except Exception:
+                # 3. Generic explainer fallback
+                self.explainer = shap.Explainer(raw_model, background)
+                shap_vals = self.explainer(X_eval)
+                output_space = "General Explainer"
 
         # Handle different SHAP output structures (Explanation object, 3D array, or list)
         if hasattr(shap_vals, "values"):

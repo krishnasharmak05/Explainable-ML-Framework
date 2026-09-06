@@ -218,3 +218,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+outputs/
+dataset/cicids2017_generated_sample.csv

@@ -28,6 +28,22 @@ def test_shap_explainer():
     assert "SHAP_Attribution" in local_df.columns
 
 
+def test_shap_explainer_xgboost():
+    rng = np.random.RandomState(42)
+    X = pd.DataFrame(rng.normal(size=(60, 4)), columns=["feat_A", "feat_B", "feat_C", "feat_D"])
+    y = (X["feat_A"] + X["feat_B"] > 0).astype(int).values
+
+    model = XGBoostWrapper(params={"n_estimators": 5, "random_state": 42, "eval_metric": "logloss"})
+    model.fit(X, y)
+
+    explainer = ShapExplainer(max_background_samples=30, max_eval_samples=40)
+    result = explainer.explain(model, X, model_name="xgb")
+
+    assert result.model_name == "xgb"
+    assert len(result.feature_importance_df) == 4
+    assert result.is_additive_verified
+
+
 def test_explanation_stability_analyzer():
     # Simulate 3 fold importance dataframes with strong agreement
     fold_dfs = [

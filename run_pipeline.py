@@ -3,6 +3,7 @@ from dataclasses import asdict
 import logging
 from pathlib import Path
 import sys
+import numpy as np
 import time
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -97,7 +98,7 @@ def run():
     if not data_path.exists() or (data_path.is_dir() and not list(data_path.glob("*.csv"))):
         if args.generate_sample:
             logger.warning(f"Dataset path {data_path} is empty or not found. Generating synthetic sample...")
-            sample_file = data_path / "cicids2017_sample.csv" if data_path.is_dir() else Path("./dataset/cicids2017_sample.csv")
+            sample_file = data_path / "cicids2017_generated_sample.csv" if data_path.is_dir() else Path("./dataset/cicids2017_sample.csv")
             generate_cicids2017_sample(n_samples=5000, output_path=sample_file, random_state=cfg.data.random_state)
             data_path = sample_file
         else:
