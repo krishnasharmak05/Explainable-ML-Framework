@@ -106,7 +106,25 @@ This generates a synthetic dataset with realistic network anomalies (infs, NaNs,
 
 ---
 
-## 4. Instructions for Adding a Real Dataset
+## 4. Interactive Web Interface (Streamlit)
+
+A full-featured, research-grade web dashboard is provided via Streamlit:
+
+```powershell
+uv run streamlit run app.py
+```
+
+### Dashboard Capabilities:
+- **Pipeline Controls**: Ingest custom CSVs or synthetic benchmarks, tune hyperparameters ($k$ features, CV folds, active classifiers), and execute the pipeline with live streaming terminal logs.
+- **Interactive SHAP Attributions**: Select individual test flow observations to generate real-time local explanation charts with directional feature impacts (crimson for attack push, navy for benign push).
+- **Reliability Diagnostics**: Inspect reliability curves and Brier/ECE calibrations across Platt and Isotonic scaling.
+- **Robustness Degradation**: Examine real-time stress testing curves under Gaussian noise, missingness injection, and top-feature corruption.
+- **Statistical Significance Tables**: View bootstrap 95% confidence intervals and paired hypothesis test decisions (McNemar, Wilcoxon, Friedman) with automatic effect size interpretations.
+- **One-Click Report Export**: View and download the comprehensive research experiment report in Markdown format.
+
+---
+
+## 5. Instructions for Adding a Real Dataset
 
 The framework contains no hardcoded assumptions, column names, or dataset-specific terminology:
 1. **Place your dataset**: Put your CSV or Parquet file into `./dataset/` (e.g., `./dataset/my_data.csv`).
