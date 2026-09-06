@@ -193,44 +193,113 @@ def synthesize_final_conclusion(
         )
 
     # 4. Explainability & Stability
+    most_stable_model = best_model_name
+    most_stable_rho = 0.0
+    most_stable_tau = 0.0
+    most_stable_jaccard = 0.0
+
     if stability_df is not None and not stability_df.empty:
         lines.append("### 9.4 Explainability Stability & Decision Transparency")
         mean_rho = float(stability_df["mean_spearman_rho"].mean())
         mean_tau = float(stability_df["mean_kendall_tau"].mean())
         mean_jaccard = float(stability_df["mean_jaccard_similarity"].mean())
+
+        top_stable = stability_df.sort_values(by="mean_spearman_rho", ascending=False).iloc[0]
+        most_stable_model = str(top_stable["model_name"])
+        most_stable_rho = float(top_stable["mean_spearman_rho"])
+        most_stable_tau = float(top_stable["mean_kendall_tau"])
+        most_stable_jaccard = float(top_stable["mean_jaccard_similarity"])
+        std_rho = float(top_stable.get("std_spearman_rho", 0.0))
+
+        evaluated_models_str = ", ".join([f"`{m}`" for m in stability_df["model_name"].unique()])
+
         lines.append(
-            f"- Global SHAP feature rankings exhibited strong inter-fold consistency with a **mean Spearman $\\rho = {mean_rho:.4f}$**, "
-            f"**Kendall $\\tau = {mean_tau:.4f}$**, and **top-$k$ Jaccard agreement of {mean_jaccard:.2%}**."
+            f"Across evaluated classifiers ({evaluated_models_str}), global SHAP feature attribution rankings demonstrated robust inter-fold consistency with an overall cross-model mean Spearman $\\rho = {mean_rho:.4f}$, "
+            f"Kendall $\\tau = {mean_tau:.4f}$, and top-$k$ Jaccard consensus of {mean_jaccard:.2%}."
         )
         lines.append(
-            "- This confirms that the model's threat detection logic is structurally stable across different data subsamples and not driven by idiosyncratic fold artifacts.\n"
+            f"- **Attribution Consistency:** **`{most_stable_model}`** achieved the highest attribution stability across cross-validation splits (Spearman $\\rho = {most_stable_rho:.4f} \\pm {std_rho:.4f}$, Kendall $\\tau = {most_stable_tau:.4f}$, top-$k$ Jaccard agreement = {most_stable_jaccard:.2%})."
+        )
+        lines.append(
+            f"- **Validation of Threat Logic:** This high rank stability confirms that the primary predictive indicators identified by `{most_stable_model}` reflect genuine signal in the underlying traffic distribution rather than random partition noise.\n"
         )
 
     # 5. Robustness Findings
+    most_robust_model = best_model_name
+    most_robust_deg = 0.0
+
     if robustness_df is not None and not robustness_df.empty:
         lines.append("### 9.5 Adversarial & Perturbation Resilience")
         noise_eval = robustness_df[robustness_df["experiment_type"] == "feature_noise"]
         corrupt_eval = robustness_df[robustness_df["experiment_type"].str.contains("corruption", na=False)]
 
+        # Compute average degradation per model across all experiments
+        avg_deg_by_model = robustness_df.groupby("model_name")["accuracy_degradation"].mean().sort_values()
+        most_robust_model = str(avg_deg_by_model.index[0])
+        most_robust_deg = float(avg_deg_by_model.iloc[0])
+
         if not noise_eval.empty:
-            max_noise = noise_eval.sort_values(by="severity_level", ascending=False).iloc[0]
+            max_noise_level = noise_eval["severity_level"].max()
+            max_noise_rows = noise_eval[noise_eval["severity_level"] == max_noise_level]
+            top_noise_model_row = max_noise_rows.sort_values(by="accuracy", ascending=False).iloc[0]
+            top_noise_model = str(top_noise_model_row["model_name"])
+            top_noise_acc = float(top_noise_model_row["accuracy"])
+            top_noise_deg = float(top_noise_model_row["accuracy_degradation"])
+
             lines.append(
-                f"- **Noise Tolerance:** Under Gaussian packet feature noise up to $\\sigma = {max_noise['severity_level']}$, "
-                f"the model maintained an accuracy of **{max_noise['accuracy']:.4f}** (accuracy degradation limited to {float(max_noise['accuracy_degradation']):.2%})."
-            )
-        if not corrupt_eval.empty:
-            worst_corrupt = corrupt_eval.sort_values(by="accuracy_degradation", ascending=False).iloc[0]
-            lines.append(
-                f"- **Critical Vulnerability:** Feature corruption of `{worst_corrupt['experiment_type'].replace('feature_corruption_', '')}` induced the largest performance drop ({float(worst_corrupt['accuracy_degradation']):.2%} drop in accuracy), highlighting this feature as a critical single-point of failure requiring ingress telemetric integrity validation.\n"
+                f"- **Gaussian Noise Tolerance:** Under maximum packet feature noise ($\\sigma = {max_noise_level}$), **`{top_noise_model}`** retained the highest residual test accuracy at **{top_noise_acc:.4f}** (accuracy degradation limited to {top_noise_deg:.2%})."
             )
 
-    # 6. Strategic Deployment Decision Matrix
+        lines.append(
+            f"- **Overall Perturbation Resilience:** **`{most_robust_model}`** exhibited the lowest overall sensitivity across all noise and corruptive regimes with an average accuracy degradation of only **{most_robust_deg:.2%}**."
+        )
+
+        if not corrupt_eval.empty:
+            worst_corrupt = corrupt_eval.sort_values(by="accuracy_degradation", ascending=False).iloc[0]
+            worst_feat_name = str(worst_corrupt["experiment_type"]).replace("feature_corruption_", "")
+            corrupt_model = str(worst_corrupt["model_name"])
+            corrupt_drop = float(worst_corrupt["accuracy_degradation"])
+            lines.append(
+                f"- **Critical Vulnerability Point:** Feature corruption of `{worst_feat_name}` induced the steepest performance decline in **`{corrupt_model}`** ({corrupt_drop:.2%} accuracy loss), identifying `{worst_feat_name}` as a critical dependency that requires strict telemetric integrity validation at the network boundary.\n"
+            )
+
+    # 6. Strategic Deployment Decision Matrix (Fully Dynamic)
     lines.append("### 9.6 Recommended Deployment Decision Matrix\n")
     lines.append("| Operational Scenario | Recommended Architecture | Primary Justification |")
     lines.append("|---|---|---|")
-    lines.append(f"| **High-Throughput Inline NIDS (10G/40G Core)** | **`{best_model_name}`** | Exceptional sub-millisecond latency and high sample throughput. |")
-    lines.append(f"| **Security Operations Center (SOC) Forensics** | **`random_forest` / `{best_model_name}`** | Verified additive SHAP attributions with high consensus feature stability. |")
-    lines.append("| **Resource-Constrained IoT Gateway / Edge Sensor** | **`xgboost` / `lightgbm`** | Minimal memory footprint (<1 MB artifact) with fast vectorized inference. |\n")
+
+    # Scenario 1: High-Throughput Core
+    if efficiency_df is not None and not efficiency_df.empty:
+        peak_throughput_row = efficiency_df.sort_values(by="inference_throughput_samples_per_sec", ascending=False).iloc[0]
+        th_model = str(peak_throughput_row["model_name"])
+        th_rate = float(peak_throughput_row["inference_throughput_samples_per_sec"])
+        th_lat = float(peak_throughput_row["inference_latency_ms_per_sample"])
+        lines.append(f"| **High-Throughput Inline NIDS (10G/40G Core)** | **`{th_model}`** | Peak throughput of {th_rate:,.0f} samples/sec with sub-millisecond latency ({th_lat:.4f} ms/sample). |")
+    else:
+        lines.append(f"| **High-Throughput Inline NIDS (10G/40G Core)** | **`{best_model_name}`** | Superior vectorized classification throughput. |")
+
+    # Scenario 2: SOC Forensics & Triage
+    if stability_df is not None and not stability_df.empty:
+        lines.append(f"| **Security Operations Center (SOC) Forensics** | **`{most_stable_model}`** | Highest inter-fold attribution stability (Spearman $\\rho = {most_stable_rho:.4f}$) and verified additive SHAP explanations. |")
+    else:
+        lines.append(f"| **Security Operations Center (SOC) Forensics** | **`{best_model_name}`** | Verified additive SHAP attributions for reliable root-cause investigation. |")
+
+    # Scenario 3: Resource-Constrained Edge Sensor
+    if efficiency_df is not None and not efficiency_df.empty:
+        min_size_row = efficiency_df.sort_values(by="model_size_kb").iloc[0]
+        edge_model = str(min_size_row["model_name"])
+        edge_size = float(min_size_row["model_size_kb"])
+        edge_ram = float(min_size_row["peak_memory_mb"])
+        lines.append(f"| **Resource-Constrained IoT Gateway / Edge Sensor** | **`{edge_model}`** | Most compact deployment footprint ({edge_size:.1f} KB disk, {edge_ram:.1f} MB RAM). |")
+    else:
+        lines.append(f"| **Resource-Constrained IoT Gateway / Edge Sensor** | **`{best_model_name}`** | Efficient decision tree representation with low memory footprint. |")
+
+    # Scenario 4: Adversarial & Noisy Channels
+    if robustness_df is not None and not robustness_df.empty:
+        lines.append(f"| **Adversarial / High-Noise Network Boundary** | **`{most_robust_model}`** | Lowest overall degradation ({most_robust_deg:.2%}) under packet perturbations. |")
+
+    # Scenario 5: High-Precision Discrimination
+    lines.append(f"| **High-Precision Mission-Critical Threat Detection** | **`{best_model_name}`** | Highest held-out discrimination fidelity (F1: {best_f1:.4f}, MCC: {best_mcc:.4f}). |\n")
 
     return "\n".join(lines)
 
