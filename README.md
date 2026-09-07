@@ -8,6 +8,7 @@ A modular, reusable, and **dataset-agnostic** machine learning research framewor
 
 ```
 predictive-project/
+├── app.py                         # Interactive Streamlit Research Web Interface
 ├── config.yaml                    # Master pipeline configuration
 ├── dataset/                       # Dataset folder (CSV files)
 ├── outputs/
@@ -19,6 +20,9 @@ predictive-project/
 │   ├── utils.py                   # Data loader, logger, reproducibility seed
 │   ├── sample_data.py             # Realistic synthetic data generator with anomalies
 │   ├── cli.py                     # CLI tool (validate, run, evaluate, explain, report)
+│   │
+│   ├── ui/                        # Web Dashboard Helpers
+│   │   └── dashboard_helpers.py   # Cached report loading, local SHAP waterfall, formatting
 │   │
 │   ├── preprocessing/             # PHASE 1: Data Preprocessing & Normalization
 │   │   └── cleaner.py             # Inf resolution, mean/median imputation, log1p, Min-Max [0, 1]
@@ -54,9 +58,9 @@ predictive-project/
 │   └── reporting/                 # PHASE 8: Publication Reports & Visualizations
 │       ├── plots.py               # ROC/PR curves, confusion matrices, calibration, stability, robustness
 │       ├── tables.py              # Native Markdown & LaTeX table generators
-│       └── report_generator.py    # Automated comprehensive research Markdown report generator
+│       └── report_generator.py    # Automated comprehensive research report with Section 9 synthesis
 │
-├── tests/                         # Automated Unit & Integration Tests (23 tests)
+├── tests/                         # Automated Unit & Integration Tests (24 tests)
 │   ├── test_preprocessing.py
 │   ├── test_feature_selection.py
 │   ├── test_modeling.py
@@ -87,12 +91,13 @@ predictive-project/
 | **Feature Selection** | Phase 2/3 | Algorithm 1: Non-parametric Mutual Information ($I(f; Y)$) ranking and top-$k$ feature subset extraction without test leakage. |
 | **Predictive Modeling Framework** | Phase 2/3 | Algorithm 2: Standardized ensemble wrappers (Random Forest, XGBoost, LightGBM) evaluated via Stratified $k$-Fold CV with fold model tracking and log-loss calculation. |
 | **Computational Benchmarking** | Phase 4 | Distinguishes preprocessing, feature selection, training, and inference time; calculates latency per sample (ms), throughput (samples/sec), peak memory (`psutil`), and model file size. |
-| **Probability Calibration** | Phase 4 | Evaluates Brier score and Expected Calibration Error (ECE). Compares uncalibrated predictions with Platt scaling (`sigmoid`) and Isotonic regression (`isotonic`). |
-| **SHAP Explainability** | Phase 5 | Pluggable `TreeExplainer` computing global mean absolute SHAP values, feature importance rankings, sample local explanations, and verification of additive feature attributions. |
+| **Probability Calibration** | Phase 4 | Evaluates Brier score and Expected Calibration Error (ECE). Compares uncalibrated predictions with Platt scaling (`sigmoid`) and Isotonic regression (`isotonic`). Publication reliability diagrams omit empty-bin distortions and support quantile equal-frequency binning. |
+| **SHAP Explainability** | Phase 5 | Model-aware `TreeExplainer` computing global mean absolute SHAP values, feature importance rankings, interactive single-instance local explanations, and verification of additive attributions across all tree models. |
 | **Explanation Stability** | Phase 5 | Measures attribution stability across CV folds: computes pairwise Spearman rank correlation ($\rho$), Kendall rank correlation ($\tau$), and Jaccard similarity ($J$) of top-$k$ features. |
 | **Robustness Suite** | Phase 6 | Evaluates metric degradation curves under controlled Gaussian feature noise ($\sigma \in [0.01, 0.20]$), random missingness, top-feature corruption, and training sample subsampling. |
 | **Statistical Analysis** | Phase 7 | Non-parametric percentile bootstrap confidence intervals ($B=1000$ resamples), paired McNemar's test, Wilcoxon signed-rank test with effect sizes, Friedman omnibus test, and Nemenyi post-hoc testing. |
-| **Reporting & Visualizations** | Phase 8 | Automated generation of high-DPI publication plots (ROC/PR curves, confusion matrices, calibration curves, stability heatmaps, robustness curves) and structured experiment report (`outputs/reports/experiment_report.md`). |
+| **Reporting & Visualizations** | Phase 8 | Automated generation of 300-DPI publication plots (ROC/PR, confusion matrices, multi-panel calibration curves, robustness curves) and structured experiment report (`outputs/reports/experiment_report.md`) with dynamic Section 9 synthesis and deployment matrix. |
+| **Streamlit Web Dashboard** | Interactive | Full-featured 8-tab web interface (`app.py`) for live pipeline runs, real-time local SHAP instance attribution, diagnostic curve browsing, and one-click report export. |
 
 ---
 

@@ -57,6 +57,7 @@ Data leakage occurs when information from outside the training dataset is inadve
 - **Platt Scaling**: Fits univariate logistic sigmoid on model logits:
   $$P(y=1|z) = \frac{1}{1 + \exp(A \cdot z + B)}$$
 - **Isotonic Regression**: Non-parametric piecewise constant monotonic calibration minimizing squared residuals under ordering constraints.
+- **Reliability Diagram Formulation**: Evaluates empirical accuracy $\text{acc}(B_m)$ vs mean predicted confidence $\text{conf}(B_m)$ across non-empty bins. Empty bins ($|B_m| = 0$) are strictly omitted to eliminate artificial zero-fraction oscillation artifacts, supporting equal-frequency quantile binning for skewed prediction distributions.
 
 ---
 
@@ -95,3 +96,13 @@ Evaluates metric degradation ($\Delta M = M_{baseline} - M_{perturbed}$) across:
   $$\chi_F^2 = \frac{12N}{K(K+1)} \left[\sum_{j=1}^K R_j^2 - \frac{K(K+1)^2}{4}\right]$$
   with Critical Difference:
   $$CD = q_{\alpha} \sqrt{\frac{K(K+1)}{6N}}$$
+
+---
+
+## 9. Phase 8: Automated Publication Reporting & Synthesis
+
+- **300-DPI Publication Figures**: Multi-panel calibration reliability diagrams (Uncalibrated vs Sigmoid vs Isotonic), side-by-side ROC and PR curves, normalized confusion matrices, and perturbation degradation profiles.
+- **Dynamic Decision Synthesis (Section 9)**: Fully data-driven algorithm ranking and strategic deployment decision matrix:
+  - Selects the superior classifier based on held-out test F1-score and MCC.
+  - Verifies whether performance superiority is statistically significant ($p < 0.05$ on McNemar/Wilcoxon) or falls within an equivalence regime.
+  - Identifies Pareto-optimal operational deployments across high-throughput wire-speed inline inspection, forensics auditing, and resource-constrained edge gateways.
