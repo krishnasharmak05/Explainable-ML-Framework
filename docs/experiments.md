@@ -84,11 +84,31 @@ All outputs are saved in machine-readable and publication-ready formats:
 - `robustness_degradation.csv`: Performance degradation curves under Gaussian noise, missingness, and corruption.
 - `bootstrap_ci.csv`: 95% non-parametric bootstrap confidence intervals for all metrics.
 - `statistical_comparisons.csv`: Paired McNemar and Wilcoxon test statistics, p-values, and effect sizes.
-- `experiment_report.md`: Automated research report synthesizing the entire study.
+- `experiment_report.md`: Automated research report with dedicated Section 9 dynamic synthesis and strategic deployment decision matrix.
 
 ### Plots Directory (`outputs/plots/`)
 - `metric_comparison.png`: Grouped comparative bar chart of Accuracy, F1, ROC-AUC, and MCC.
 - `roc_pr_curves.png`: Side-by-side ROC and Precision-Recall curves.
 - `confusion_matrices.png`: Normalized confusion matrix heatmaps.
-- `calibration_curves.png`: Reliability diagrams with diagonal reference.
+- `calibration_curves.png`: Multi-panel reliability diagrams (Uncalibrated vs Sigmoid vs Isotonic) with quantile binning.
 - `robustness_degradation.png`: Degradation curve across perturbation severities.
+
+---
+
+## 4. Interactive Web Interface (Streamlit)
+
+Launch the interactive dashboard to run experiments and explore outputs visually:
+
+```powershell
+uv run streamlit run app.py
+```
+
+### Dashboard Tabs:
+1. **Overview**: Key metrics (models trained, total samples, selected features, pipeline status), live active dataset preview, and 8-phase pipeline architecture flowchart.
+2. **Feature Selection**: Top-$k$ Mutual Information feature scores and interactive ranking chart.
+3. **Modeling & Benchmarks**: Stratified CV log-loss, ROC/PR curves, confusion matrices, and throughput/latency/RAM/size benchmarking comparisons.
+4. **Calibration**: Multi-panel reliability diagrams (Uncalibrated vs Platt Scaling vs Isotonic Regression), Brier score, and ECE reduction tables.
+5. **SHAP Explainability**: Global feature importance comparisons across all tree ensembles, **interactive local instance attribution** (inspect any test sample to see why an intrusion alert was triggered), and explanation stability across CV folds.
+6. **Robustness**: Real-time stress testing curves under Gaussian noise, random missingness, and top-feature corruption.
+7. **Hypothesis Testing**: Bootstrap 95% confidence intervals, paired McNemar and Wilcoxon signed-rank tests with formatted p-values and effect sizes.
+8. **Research Report**: Rendered full Markdown report with one-click `.md` download and Section 9 strategic synthesis.

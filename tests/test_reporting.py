@@ -71,4 +71,6 @@ def test_table_and_report_generation(tmp_path):
     )
 
     assert "# Machine Learning Research Experiment Report" in report_text
+    assert "## 9. Final Conclusion & Strategic Recommendations" in report_text
+    assert "Deployment Decision Matrix" in report_text
     assert report_path.exists()
