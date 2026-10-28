@@ -181,6 +181,8 @@ def main():
             elif selected_dataset_path:
                 pipeline_args.extend(["--data-path", str(selected_dataset_path)])
 
+            pipeline_args.extend(["--mode", classification_mode, "--k-features", str(top_k_features)])
+
             success = run_pipeline_process(pipeline_args, log_placeholder)
             if success:
                 st.rerun()

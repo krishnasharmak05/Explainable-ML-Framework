@@ -56,7 +56,26 @@ def parse_args():
         action="store_true",
         help="Generate synthetic dataset in ./dataset/ if no data exists",
     )
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Force overwrite of existing report/plot outputs (model files are always saved)",
+    )
     return parser.parse_args()
+
+
+def _save_if_new(df_or_fn, path: Path, force: bool, logger, kind: str = "csv") -> bool:
+    """Save a DataFrame (kind='csv') or call a zero-arg function (kind='fn') only if
+    the target *path* does not already exist, unless *force* is True.
+    Returns True when the file was written, False when it was skipped."""
+    if path.exists() and not force:
+        logger.info(f"  [skip] {path} already exists (use --force to overwrite).")
+        return False
+    if kind == "csv":
+        df_or_fn.to_csv(path, index=False)
+    else:  # kind == "fn": caller passes a zero-arg callable
+        df_or_fn()
+    return True
 
 
 def run():
@@ -88,6 +107,10 @@ def run():
     logger.info(f"Calibration Enabled:   {cfg.calibration.enabled}")
     logger.info(f"Explainability/SHAP:   {cfg.explainability.enabled}")
     logger.info(f"Robustness Suite:      {cfg.robustness.enabled}")
+    if args.force:
+        logger.info("Output mode:           FORCE — existing reports/plots will be overwritten")
+    else:
+        logger.info("Output mode:           SKIP EXISTING — reports/plots kept; use --force to overwrite")
 
     set_seed(cfg.data.random_state)
     resource_tracker = ResourceTracker()
@@ -198,8 +221,8 @@ def run():
 
     summary_df = training_results.summary()
     summary_csv = reports_dir / "cv_training_summary.csv"
-    summary_df.to_csv(summary_csv, index=False)
-    logger.info(f"Saved CV summary to {summary_csv}")
+    if _save_if_new(summary_df, summary_csv, args.force, logger):
+        logger.info(f"Saved CV summary to {summary_csv}")
 
     # 6. Phase 4: Computational Benchmarking & Resource Tracking
     peak_memory = resource_tracker.stop_memory_tracking()
@@ -237,8 +260,8 @@ def run():
 
         bench_df = ResourceTracker.reports_to_dataframe(efficiency_reports)
         bench_csv = reports_dir / "efficiency_benchmarks.csv"
-        bench_df.to_csv(bench_csv, index=False)
-        logger.info(f"Saved computational benchmarks to {bench_csv}")
+        if _save_if_new(bench_df, bench_csv, args.force, logger):
+            logger.info(f"Saved computational benchmarks to {bench_csv}")
 
     # 7. Phase 4: Probability Calibration Analysis
     if cfg.calibration.enabled:
@@ -272,8 +295,8 @@ def run():
 
         cal_df = ModelCalibrator.reports_to_dataframe(all_cal_reports)
         cal_csv = reports_dir / "calibration_metrics.csv"
-        cal_df.to_csv(cal_csv, index=False)
-        logger.info(f"Saved calibration analysis to {cal_csv}")
+        if _save_if_new(cal_df, cal_csv, args.force, logger):
+            logger.info(f"Saved calibration analysis to {cal_csv}")
 
     # 8. Phase 5: SHAP Explainability & Explanation Stability
     if cfg.explainability.enabled:
@@ -295,8 +318,8 @@ def run():
 
         all_shap_df = pd.concat(shap_dfs, ignore_index=True)
         shap_csv = reports_dir / "shap_global_importance.csv"
-        all_shap_df.to_csv(shap_csv, index=False)
-        logger.info(f"Saved SHAP global importance to {shap_csv}")
+        if _save_if_new(all_shap_df, shap_csv, args.force, logger):
+            logger.info(f"Saved SHAP global importance to {shap_csv}")
 
         # Explanation Stability Analysis across CV Folds
         if cfg.explainability.stability.enabled:
@@ -316,13 +339,16 @@ def run():
                     stability_summaries.append(stab_res.summary_dict())
                     # Save pairwise Spearman matrix
                     mat_file = reports_dir / f"stability_spearman_{model_name}.csv"
-                    stab_res.pairwise_spearman_matrix.to_csv(mat_file)
+                    if mat_file.exists() and not args.force:
+                        logger.info(f"  [skip] {mat_file} already exists (use --force to overwrite).")
+                    else:
+                        stab_res.pairwise_spearman_matrix.to_csv(mat_file)
 
             if stability_summaries:
                 stab_df = pd.DataFrame(stability_summaries)
                 stab_csv = reports_dir / "explanation_stability.csv"
-                stab_df.to_csv(stab_csv, index=False)
-                logger.info(f"Saved explanation stability summary to {stab_csv}")
+                if _save_if_new(stab_df, stab_csv, args.force, logger):
+                    logger.info(f"Saved explanation stability summary to {stab_csv}")
 
     # 9. Phase 6: Robustness Experiments
     if cfg.robustness.enabled:
@@ -348,8 +374,8 @@ def run():
 
         rob_df = RobustnessEvaluator.reports_to_dataframe(all_robustness_reports)
         rob_csv = reports_dir / "robustness_degradation.csv"
-        rob_df.to_csv(rob_csv, index=False)
-        logger.info(f"Saved robustness degradation report to {rob_csv}")
+        if _save_if_new(rob_df, rob_csv, args.force, logger):
+            logger.info(f"Saved robustness degradation report to {rob_csv}")
 
     # 10. Phase 7: Statistical Analysis & Hypothesis Testing
     logger.info(">>> Running Phase 7: Statistical Analysis & Hypothesis Testing...")
@@ -377,7 +403,13 @@ def run():
         f1 = f1_score(y_test, preds, average=avg_m, zero_division=0)
         mcc = matthews_corrcoef(y_test, preds)
         p1 = probs[:, 1] if is_bin and probs.ndim == 2 else probs
-        auc = roc_auc_score(y_test, p1) if is_bin else 0.0
+        if is_bin:
+            auc = roc_auc_score(y_test, p1)
+        else:
+            try:
+                auc = roc_auc_score(y_test, probs, multi_class="ovr", average="weighted")
+            except Exception:
+                auc = 0.0
 
         test_metrics_records.append({
             "Model": model_name,
@@ -400,8 +432,8 @@ def run():
     )
     boot_df = bootstrap_results_to_dataframe(boot_ci_dict)
     boot_csv = reports_dir / "bootstrap_ci.csv"
-    boot_df.to_csv(boot_csv, index=False)
-    logger.info(f"Saved bootstrap confidence intervals to {boot_csv}")
+    if _save_if_new(boot_df, boot_csv, args.force, logger):
+        logger.info(f"Saved bootstrap confidence intervals to {boot_csv}")
 
     # 10.2 Paired Comparisons & Omnibus Tests
     stat_test_records = []
@@ -426,8 +458,8 @@ def run():
 
     stat_df = pd.DataFrame(stat_test_records)
     stat_csv = reports_dir / "statistical_comparisons.csv"
-    stat_df.to_csv(stat_csv, index=False)
-    logger.info(f"Saved statistical comparisons to {stat_csv}")
+    if _save_if_new(stat_df, stat_csv, args.force, logger):
+        logger.info(f"Saved statistical comparisons to {stat_csv}")
 
     # 11. Phase 8: Publication-Quality Reporting & Visualizations
     logger.info(">>> Running Phase 8: Publication-Quality Plots & Research Report...")
@@ -444,19 +476,25 @@ def run():
     )
     from src.reporting.report_generator import generate_research_report
 
-    # Save Plots
-    plot_metric_comparison(perf_df, plots_dir / "metric_comparison.png")
-    plot_roc_pr_curves(y_test, models_probs_dict, plots_dir / "roc_pr_curves.png")
-    plot_confusion_matrices(y_test, models_preds_dict, plots_dir / "confusion_matrices.png")
+    # Save Plots — skip each individually if already present (unless --force)
+    def _plot_if_new(plot_fn, path, *fn_args):
+        if path.exists() and not args.force:
+            logger.info(f"  [skip] {path} already exists (use --force to overwrite).")
+        else:
+            plot_fn(*fn_args, path)
+
+    _plot_if_new(plot_metric_comparison, plots_dir / "metric_comparison.png", perf_df)
+    _plot_if_new(plot_roc_pr_curves, plots_dir / "roc_pr_curves.png", y_test, models_probs_dict)
+    _plot_if_new(plot_confusion_matrices, plots_dir / "confusion_matrices.png", y_test, models_preds_dict)
 
     # Calibration curves plot
     from src.calibration.metrics import compute_calibration_curve
     cal_curves = {m: compute_calibration_curve(y_test, models_probs_dict[m]) for m in active_m}
-    plot_calibration_curves(cal_curves, plots_dir / "calibration_curves.png")
+    _plot_if_new(plot_calibration_curves, plots_dir / "calibration_curves.png", cal_curves)
 
     # Robustness plot
-    plot_robustness_degradation(rob_df, plots_dir / "robustness_degradation.png")
-    logger.info(f"Saved publication-quality plots to {plots_dir}")
+    _plot_if_new(plot_robustness_degradation, plots_dir / "robustness_degradation.png", rob_df)
+    logger.info(f"Publication-quality plots checked/saved in {plots_dir}")
 
     # Generate Full Research Markdown Report
     dataset_metadata = {
@@ -472,19 +510,22 @@ def run():
     }
 
     report_file = reports_dir / "experiment_report.md"
-    generate_research_report(
-        dataset_metadata=dataset_metadata,
-        config_dict={},
-        performance_df=perf_df,
-        efficiency_df=bench_df if cfg.benchmarking.enabled else None,
-        calibration_df=cal_df if cfg.calibration.enabled else None,
-        stability_df=stab_df if cfg.explainability.stability.enabled and "stab_df" in locals() else None,
-        robustness_df=rob_df if cfg.robustness.enabled else None,
-        statistical_tests=stat_test_records,
-        bootstrap_df=boot_df,
-        output_path=str(report_file),
-    )
-    logger.info(f"Saved comprehensive research experiment report to {report_file}")
+    if report_file.exists() and not args.force:
+        logger.info(f"  [skip] {report_file} already exists (use --force to overwrite).")
+    else:
+        generate_research_report(
+            dataset_metadata=dataset_metadata,
+            config_dict={},
+            performance_df=perf_df,
+            efficiency_df=bench_df if cfg.benchmarking.enabled else None,
+            calibration_df=cal_df if cfg.calibration.enabled else None,
+            stability_df=stab_df if cfg.explainability.stability.enabled and "stab_df" in locals() else None,
+            robustness_df=rob_df if cfg.robustness.enabled else None,
+            statistical_tests=stat_test_records,
+            bootstrap_df=boot_df,
+            output_path=str(report_file),
+        )
+        logger.info(f"Saved comprehensive research experiment report to {report_file}")
 
     logger.info("=" * 70)
     logger.info("ALL PHASES (1 - 8) COMPLETED SUCCESSFULLY!")

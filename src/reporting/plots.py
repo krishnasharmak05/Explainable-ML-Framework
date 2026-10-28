@@ -5,7 +5,8 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from sklearn.metrics import confusion_matrix, precision_recall_curve, roc_curve
+from sklearn.metrics import auc, confusion_matrix, precision_recall_curve, roc_curve
+from sklearn.preprocessing import label_binarize
 
 
 def _setup_plot_style():
@@ -69,34 +70,78 @@ def plot_roc_pr_curves(
     models_probs: Dict[str, np.ndarray],
     output_path: Union[str, Path],
 ) -> None:
-    """Plots side-by-side ROC and Precision-Recall curves for binary classification."""
+    """Plots side-by-side ROC and Precision-Recall curves for binary or multiclass classification."""
     _setup_plot_style()
     output_path = Path(output_path)
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
-    fig, (ax_roc, ax_pr) = plt.subplots(1, 2, figsize=(12, 5))
+    fig, (ax_roc, ax_pr) = plt.subplots(1, 2, figsize=(13, 5))
 
-    for name, probs in models_probs.items():
-        p1 = probs[:, 1] if probs.ndim == 2 and probs.shape[1] == 2 else probs.ravel()
-        fpr, tpr, _ = roc_curve(y_true, p1)
-        prec, rec, _ = precision_recall_curve(y_true, p1)
+    y_true_arr = np.asarray(y_true)
+    classes = np.unique(y_true_arr)
+    is_binary = len(classes) <= 2
 
-        ax_roc.plot(fpr, tpr, label=name, lw=2)
-        ax_pr.plot(rec, prec, label=name, lw=2)
+    if is_binary:
+        # Binary classification
+        if set(classes) != {0, 1}:
+            y_bin = (y_true_arr == classes[-1]).astype(int)
+        else:
+            y_bin = y_true_arr.astype(int)
 
-    # ROC Baseline
-    ax_roc.plot([0, 1], [0, 1], "k--", lw=1, alpha=0.7)
-    ax_roc.set_title("Receiver Operating Characteristic (ROC)")
+        for name, probs in models_probs.items():
+            probs_arr = np.asarray(probs)
+            p1 = probs_arr[:, 1] if probs_arr.ndim == 2 and probs_arr.shape[1] == 2 else probs_arr.ravel()
+            fpr, tpr, _ = roc_curve(y_bin, p1)
+            prec, rec, _ = precision_recall_curve(y_bin, p1)
+            roc_auc = auc(fpr, tpr)
+            pr_auc = auc(rec, prec)
+
+            ax_roc.plot(fpr, tpr, label=f"{name} (AUC = {roc_auc:.3f})", lw=2)
+            ax_pr.plot(rec, prec, label=f"{name} (AUC = {pr_auc:.3f})", lw=2)
+
+        # Baseline
+        no_skill = np.sum(y_bin == 1) / len(y_bin) if len(y_bin) > 0 else 0.5
+        ax_pr.axhline(no_skill, color="k", linestyle="--", lw=1, alpha=0.7, label=f"Baseline ({no_skill:.2f})")
+
+        ax_roc.set_title("Receiver Operating Characteristic (ROC)")
+        ax_pr.set_title("Precision-Recall Curve")
+    else:
+        # Multiclass classification: One-vs-Rest Micro-Average
+        y_one_hot = label_binarize(y_true_arr, classes=classes)
+        if y_one_hot.ndim == 1:
+            y_one_hot = np.column_stack([1 - y_one_hot, y_one_hot])
+
+        for name, probs in models_probs.items():
+            probs_arr = np.asarray(probs)
+            if probs_arr.ndim == 2 and probs_arr.shape[1] == len(classes):
+                fpr, tpr, _ = roc_curve(y_one_hot.ravel(), probs_arr.ravel())
+                prec, rec, _ = precision_recall_curve(y_one_hot.ravel(), probs_arr.ravel())
+                roc_auc = auc(fpr, tpr)
+                pr_auc = auc(rec, prec)
+
+                ax_roc.plot(fpr, tpr, label=f"{name} (micro-AUC = {roc_auc:.3f})", lw=2)
+                ax_pr.plot(rec, prec, label=f"{name} (micro-AUC = {pr_auc:.3f})", lw=2)
+
+        # Micro-average baseline for multiclass PR is 1 / n_classes
+        no_skill = 1.0 / len(classes)
+        ax_pr.axhline(no_skill, color="k", linestyle="--", lw=1, alpha=0.7, label=f"Baseline ({no_skill:.2f})")
+
+        ax_roc.set_title("ROC Curve (Micro-Average, OvR)")
+        ax_pr.set_title("Precision-Recall Curve (Micro-Average, OvR)")
+
+    # ROC formatting
+    ax_roc.plot([0, 1], [0, 1], "k--", lw=1, alpha=0.7, label="Chance")
     ax_roc.set_xlabel("False Positive Rate")
     ax_roc.set_ylabel("True Positive Rate")
+    ax_roc.set_xlim([-0.02, 1.02])
+    ax_roc.set_ylim([-0.02, 1.02])
     ax_roc.legend(loc="lower right", frameon=True)
 
-    # PR Baseline
-    no_skill = np.sum(y_true == 1) / len(y_true)
-    ax_pr.axhline(no_skill, color="k", linestyle="--", lw=1, alpha=0.7)
-    ax_pr.set_title("Precision-Recall Curve")
+    # PR formatting
     ax_pr.set_xlabel("Recall")
     ax_pr.set_ylabel("Precision")
+    ax_pr.set_xlim([-0.02, 1.02])
+    ax_pr.set_ylim([-0.02, 1.02])
     ax_pr.legend(loc="lower left", frameon=True)
 
     plt.tight_layout()

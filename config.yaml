@@ -16,7 +16,7 @@ data:
 
 preprocessing:
   # Strategy for missing value imputation: "mean" or "median" (Equation 1)
-  imputation_strategy: "mean"
+  imputation_strategy: "median"
   # Absolute skewness threshold above which log(X + 1) transformation is applied (Equation 2)
   skewness_threshold: 1.0
   # Min-Max scaling range (Equation 3)

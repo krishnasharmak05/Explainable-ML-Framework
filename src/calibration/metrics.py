@@ -88,14 +88,29 @@ def compute_calibration_curve(
 ) -> Dict[str, np.ndarray]:
     """
     Computes empirical accuracy and average confidence across bins for reliability curves.
+    Supports both binary and multi-class predictions.
     """
     y_true_arr = np.asarray(y_true)
     y_prob_arr = np.asarray(y_prob)
 
-    if y_prob_arr.ndim == 2:
-        probs = y_prob_arr[:, 1] if y_prob_arr.shape[1] == 2 else np.max(y_prob_arr, axis=1)
+    unique_classes = np.unique(y_true_arr)
+    is_binary = len(unique_classes) <= 2 and (y_prob_arr.ndim == 1 or y_prob_arr.shape[1] <= 2)
+
+    if is_binary:
+        if set(unique_classes) != {0, 1}:
+            pos_label = unique_classes[-1]
+            correct_or_pos = (y_true_arr == pos_label).astype(float)
+        else:
+            correct_or_pos = (y_true_arr == 1).astype(float)
+
+        if y_prob_arr.ndim == 2 and y_prob_arr.shape[1] == 2:
+            probs = y_prob_arr[:, 1]
+        else:
+            probs = y_prob_arr.ravel()
     else:
-        probs = y_prob_arr.ravel()
+        probs = np.max(y_prob_arr, axis=1)
+        preds = np.argmax(y_prob_arr, axis=1)
+        correct_or_pos = (preds == y_true_arr).astype(float)
 
     bin_boundaries = np.linspace(0.0, 1.0, n_bins + 1)
     bin_accs = []
@@ -112,7 +127,7 @@ def compute_calibration_curve(
             in_bin = (probs >= bin_lower) & (probs < bin_upper)
 
         if np.any(in_bin):
-            bin_accs.append(float(np.mean(y_true_arr[in_bin])))
+            bin_accs.append(float(np.mean(correct_or_pos[in_bin])))
             bin_confs.append(float(np.mean(probs[in_bin])))
             bin_counts.append(int(np.sum(in_bin)))
         else:

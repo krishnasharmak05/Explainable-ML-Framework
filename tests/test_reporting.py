@@ -38,6 +38,21 @@ def test_plot_generation(tmp_path):
     plot_roc_pr_curves(y_true, models_probs, roc_plot_path)
     assert roc_plot_path.exists()
 
+    # Test multiclass ROC/PR curves (e.g. 3 classes)
+    y_true_multi = np.array([0, 1, 2, 0, 1, 2, 0, 1, 2, 0] * 3)
+    n_samples = len(y_true_multi)
+    # Generate mock probabilities for 3 classes
+    p_multi = np.zeros((n_samples, 3))
+    for idx, c in enumerate(y_true_multi):
+        p_multi[idx, c] = 0.7
+        p_multi[idx, (c + 1) % 3] = 0.2
+        p_multi[idx, (c + 2) % 3] = 0.1
+    models_probs_multi = {"RF_multi": p_multi, "XGB_multi": p_multi}
+    roc_multi_path = tmp_path / "roc_pr_multi.png"
+    plot_roc_pr_curves(y_true_multi, models_probs_multi, roc_multi_path)
+    assert roc_multi_path.exists()
+    assert roc_multi_path.stat().st_size > 0
+
     # Test confusion matrix plot
     models_preds = {
         "RF": y_true,

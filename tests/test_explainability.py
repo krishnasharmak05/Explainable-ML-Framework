@@ -44,6 +44,26 @@ def test_shap_explainer_xgboost():
     assert result.is_additive_verified
 
 
+def test_shap_explainer_multiclass():
+    rng = np.random.RandomState(42)
+    X = pd.DataFrame(rng.normal(size=(60, 4)), columns=["feat_A", "feat_B", "feat_C", "feat_D"])
+    y = rng.choice([0, 1, 2], size=60)
+
+    model = RandomForestWrapper(params={"n_estimators": 5, "random_state": 42})
+    model.fit(X, y)
+
+    explainer = ShapExplainer(max_background_samples=25, max_eval_samples=30)
+    result = explainer.explain(model, X, model_name="rf_multi")
+
+    assert result.model_name == "rf_multi"
+    assert len(result.feature_importance_df) == 4
+    assert result.is_additive_verified
+
+    # Test local explanation for sample
+    local_df = ShapExplainer.explain_local_sample(result, sample_index=0, feature_values=X.iloc[0])
+    assert len(local_df) == 4
+
+
 def test_explanation_stability_analyzer():
     # Simulate 3 fold importance dataframes with strong agreement
     fold_dfs = [

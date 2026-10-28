@@ -220,4 +220,6 @@ __marimo__/
 .streamlit/secrets.toml
 
 outputs/
+!outputs/models/
+!outputs/models/*.joblib
 dataset/cicids2017_generated_sample.csv

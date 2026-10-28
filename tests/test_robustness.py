@@ -61,3 +61,30 @@ def test_robustness_evaluator():
     df_rep = RobustnessEvaluator.reports_to_dataframe(reports)
     assert "accuracy_degradation" in df_rep.columns
     assert "mcc" in df_rep.columns
+
+
+def test_robustness_evaluator_multiclass():
+    rng = np.random.RandomState(42)
+    X_tr = pd.DataFrame(rng.normal(size=(80, 4)), columns=[f"f{i}" for i in range(4)])
+    y_tr = rng.choice([0, 1, 2], size=80)
+
+    X_te = pd.DataFrame(rng.normal(size=(30, 4)), columns=[f"f{i}" for i in range(4)])
+    y_te = rng.choice([0, 1, 2], size=30)
+
+    model = RandomForestWrapper(params={"n_estimators": 5, "random_state": 42})
+    model.fit(X_tr, y_tr)
+
+    evaluator = RobustnessEvaluator(random_state=42)
+    reports = evaluator.evaluate_model_robustness(
+        model=model,
+        X_test=X_te,
+        y_test=y_te,
+        model_name="rf_multi",
+        noise_levels=[0.05],
+        top_features_to_corrupt=["f0"],
+    )
+
+    assert len(reports) >= 3
+    df_rep = RobustnessEvaluator.reports_to_dataframe(reports)
+    assert "accuracy_degradation" in df_rep.columns
+    assert "mcc" in df_rep.columns

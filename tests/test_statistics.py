@@ -29,6 +29,32 @@ def test_bootstrap_ci():
     assert len(df) == len(results)
 
 
+def test_bootstrap_ci_multiclass():
+    rng = np.random.RandomState(42)
+    n = 120
+    y_true = rng.choice([0, 1, 2], size=n)
+    # Mock probabilities for 3 classes
+    y_prob = np.zeros((n, 3))
+    for i, c in enumerate(y_true):
+        y_prob[i, c] = 0.7
+        y_prob[i, (c + 1) % 3] = 0.2
+        y_prob[i, (c + 2) % 3] = 0.1
+    y_pred = np.argmax(y_prob, axis=1)
+
+    results = compute_bootstrap_ci(
+        y_true, y_pred, y_prob, n_bootstraps=30, confidence_level=0.95, random_state=42
+    )
+
+    assert "accuracy" in results
+    assert "f1" in results
+    assert "mcc" in results
+    assert "roc_auc" in results
+    assert "brier_score" in results
+
+    acc_res = results["accuracy"]
+    assert 0.0 <= acc_res.ci_lower <= acc_res.ci_upper <= 1.0
+
+
 def test_mcnemar_test():
     y_true = np.array([1, 1, 1, 1, 0, 0, 0, 0, 1, 0] * 5)
     # Model A is mostly correct

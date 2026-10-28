@@ -44,6 +44,17 @@ class XGBoostWrapper(BaseModelWrapper):
         merged_params = {**default_params, **self.params}
         self.model = xgb.XGBClassifier(**merged_params)
 
+    def fit(self, X: Any, y: Any) -> "XGBoostWrapper":
+        """Fits XGBoost with automatic logloss/mlogloss metric adaptation for multiclass."""
+        y_val = y.values if hasattr(y, "values") else y
+        n_classes = len(set(y_val))
+        current_metric = self.model.get_params().get("eval_metric")
+        if n_classes > 2 and current_metric in ("logloss", None):
+            self.model.set_params(eval_metric="mlogloss")
+        elif n_classes == 2 and current_metric == "mlogloss":
+            self.model.set_params(eval_metric="logloss")
+        return super().fit(X, y)
+
 
 class LightGBMWrapper(BaseModelWrapper):
     """

@@ -1,3 +1,11 @@
+> [!CAUTION]
+> **FOR FACULTY REVIEW ONLY — NOT FOR PUBLIC USE OR PUBLICATION**
+>
+> This repository is shared exclusively for academic assessment and evaluation by designated faculty members.
+> **Do not redistribute, share, or use any part of this work in any publication, paper, presentation, or derivative project without explicit written permission from the author.**
+> This repository is temporarily public to facilitate a shareable link for review; public visibility on GitHub does not grant any rights beyond reading for evaluation purposes.
+> See [LICENSE](./LICENSE) for full terms.
+
 # Research-Grade Explainable ML Framework (Phases 1 - 8)
 
 A modular, reusable, and **dataset-agnostic** machine learning research framework for supervised tabular classification, adhering to strict data-leakage prevention, comprehensive statistical comparisons, and explainability standards.
