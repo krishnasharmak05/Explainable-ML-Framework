@@ -222,4 +222,9 @@ __marimo__/
 outputs/
 !outputs/models/
 !outputs/models/*.joblib
+!outputs/plots/
+!outputs/plots/**
+!outputs/reports/
+!outputs/reports/**
+!outputs/pipeline.log
 dataset/cicids2017_generated_sample.csv
