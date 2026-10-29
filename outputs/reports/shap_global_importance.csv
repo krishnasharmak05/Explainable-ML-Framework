@@ -1,0 +1,46 @@
+Feature,Mean_Absolute_SHAP,Rank,Model
+Destination Port,0.07645936153721301,1,random_forest
+Bwd Packet Length Mean,0.054632780116331825,2,random_forest
+Packet Length Mean,0.050584908582344476,3,random_forest
+Avg Bwd Segment Size,0.04892825122993172,4,random_forest
+Average Packet Size,0.039155949656078055,5,random_forest
+Bwd Packet Length Max,0.03534949245078977,6,random_forest
+Packet Length Variance,0.03301784818542421,7,random_forest
+Packet Length Std,0.028463435666015245,8,random_forest
+Subflow Bwd Bytes,0.02748371705535454,9,random_forest
+Max Packet Length,0.02723026466482867,10,random_forest
+Total Length of Bwd Packets,0.023364176237011303,11,random_forest
+Flow IAT Mean,0.021675500765829494,12,random_forest
+Fwd Packet Length Max,0.021287430771129923,13,random_forest
+Flow IAT Max,0.015163494156577154,14,random_forest
+Flow Duration,0.012537283827284954,15,random_forest
+Destination Port,2.7621097564697266,1,xgboost
+Bwd Packet Length Mean,1.7042518854141235,2,xgboost
+Total Length of Bwd Packets,1.2512485980987549,3,xgboost
+Packet Length Mean,1.1441022157669067,4,xgboost
+Flow IAT Mean,1.0551183223724365,5,xgboost
+Bwd Packet Length Max,1.0005154609680176,6,xgboost
+Fwd Packet Length Max,0.38116273283958435,7,xgboost
+Average Packet Size,0.36686789989471436,8,xgboost
+Flow IAT Max,0.29190218448638916,9,xgboost
+Max Packet Length,0.28377237915992737,10,xgboost
+Flow Duration,0.24881981313228607,11,xgboost
+Packet Length Variance,0.07496244460344315,12,xgboost
+Packet Length Std,0.06286659836769104,13,xgboost
+Avg Bwd Segment Size,0.0,14,xgboost
+Subflow Bwd Bytes,0.0,15,xgboost
+Destination Port,2.8375917032453173,1,lightgbm
+Bwd Packet Length Mean,2.2088151332097454,2,lightgbm
+Total Length of Bwd Packets,0.9342729320223752,3,lightgbm
+Packet Length Mean,0.7827745443590162,4,lightgbm
+Flow IAT Mean,0.7257629184562902,5,lightgbm
+Bwd Packet Length Max,0.5640901338320441,6,lightgbm
+Average Packet Size,0.45075739464988523,7,lightgbm
+Packet Length Variance,0.3510500722202233,8,lightgbm
+Flow IAT Max,0.3492164693198051,9,lightgbm
+Fwd Packet Length Max,0.3335204619600549,10,lightgbm
+Max Packet Length,0.2317219594067957,11,lightgbm
+Flow Duration,0.19537658442768685,12,lightgbm
+Subflow Bwd Bytes,0.0,13,lightgbm
+Avg Bwd Segment Size,0.0,14,lightgbm
+Packet Length Std,0.0,15,lightgbm

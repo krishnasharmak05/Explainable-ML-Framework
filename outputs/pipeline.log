@@ -1,0 +1,1297 @@
+[2026-09-07 01:27:44] [INFO] pipeline: ======================================================================
+[2026-09-07 01:27:44] [INFO] pipeline: DATASET-AGNOSTIC EXPLAINABLE ML PIPELINE (PHASES 1 - 6)
+[2026-09-07 01:27:44] [INFO] pipeline: ======================================================================
+[2026-09-07 01:27:44] [INFO] pipeline: Classification Mode:   BINARY
+[2026-09-07 01:27:44] [INFO] pipeline: Mutual Info Top-k:     15
+[2026-09-07 01:27:44] [INFO] pipeline: CV Folds:              5
+[2026-09-07 01:27:44] [INFO] pipeline: Benchmarking Enabled:  True
+[2026-09-07 01:27:44] [INFO] pipeline: Calibration Enabled:   True
+[2026-09-07 01:27:44] [INFO] pipeline: Explainability/SHAP:   True
+[2026-09-07 01:27:44] [INFO] pipeline: Robustness Suite:      True
+[2026-09-07 01:27:44] [WARNING] pipeline: Dataset path dataset is empty or not found. Generating synthetic sample...
+[2026-09-07 01:27:46] [INFO] pipeline: Loading CSV: cicids2017_sample.csv (1.03 MB)...
+[2026-09-07 01:27:46] [INFO] pipeline: Loaded dataset total shape: 5,000 rows x 22 columns
+[2026-09-07 01:27:46] [INFO] pipeline: >>> Running Module 1: Data Preprocessing & Normalization...
+[2026-09-07 01:27:46] [INFO] pipeline: Train split: 4,000 samples | Test split: 1,000 samples
+[2026-09-07 01:27:47] [INFO] pipeline: Module 1 complete in 0.80s. Skewed features: 11
+[2026-09-07 01:27:47] [INFO] pipeline: >>> Running Module 2: Feature Selection (Top-k=15)...
+[2026-09-07 01:27:48] [INFO] pipeline: Module 2 complete in 0.91s. Selected 15 features.
+[2026-09-07 01:27:48] [INFO] pipeline: Top 5 features: ['Fwd Header Length', 'Total Fwd Packets', 'Subflow Fwd Packets', 'Flow Bytes/s', 'SYN Flag Count']
+[2026-09-07 01:27:48] [INFO] pipeline: >>> Running Module 3: Predictive Modeling Framework (Algorithm 2)...
+[2026-09-07 01:27:48] [INFO] pipeline: --- Training Model: random_forest ---
+[2026-09-07 01:27:50] [INFO] pipeline:   [random_forest] Fold 1/5 Log-Loss: 0.04751
+[2026-09-07 01:27:52] [INFO] pipeline:   [random_forest] Fold 2/5 Log-Loss: 0.02525
+[2026-09-07 01:27:53] [INFO] pipeline:   [random_forest] Fold 3/5 Log-Loss: 0.09219
+[2026-09-07 01:27:55] [INFO] pipeline:   [random_forest] Fold 4/5 Log-Loss: 0.04248
+[2026-09-07 01:27:56] [INFO] pipeline:   [random_forest] Fold 5/5 Log-Loss: 0.03098
+[2026-09-07 01:27:56] [INFO] pipeline:   [random_forest] CV Log-Loss: 0.04768 (+/- 0.02362)
+[2026-09-07 01:27:56] [INFO] pipeline:   [random_forest] Fitting final model on full training set...
+[2026-09-07 01:27:58] [INFO] pipeline:   [random_forest] Computing test prediction probabilities...
+[2026-09-07 01:27:58] [INFO] pipeline:   [random_forest] Saved model checkpoint to outputs\models\random_forest.joblib
+[2026-09-07 01:27:58] [INFO] pipeline: --- Training Model: xgboost ---
+[2026-09-07 01:27:59] [INFO] pipeline:   [xgboost] Fold 1/5 Log-Loss: 0.03687
+[2026-09-07 01:27:59] [INFO] pipeline:   [xgboost] Fold 2/5 Log-Loss: 0.02356
+[2026-09-07 01:28:00] [INFO] pipeline:   [xgboost] Fold 3/5 Log-Loss: 0.05304
+[2026-09-07 01:28:00] [INFO] pipeline:   [xgboost] Fold 4/5 Log-Loss: 0.02739
+[2026-09-07 01:28:01] [INFO] pipeline:   [xgboost] Fold 5/5 Log-Loss: 0.02201
+[2026-09-07 01:28:01] [INFO] pipeline:   [xgboost] CV Log-Loss: 0.03257 (+/- 0.01146)
+[2026-09-07 01:28:01] [INFO] pipeline:   [xgboost] Fitting final model on full training set...
+[2026-09-07 01:28:01] [INFO] pipeline:   [xgboost] Computing test prediction probabilities...
+[2026-09-07 01:28:01] [INFO] pipeline:   [xgboost] Saved model checkpoint to outputs\models\xgboost.joblib
+[2026-09-07 01:28:01] [INFO] pipeline: --- Training Model: lightgbm ---
+[2026-09-07 01:28:01] [INFO] pipeline:   [lightgbm] Fold 1/5 Log-Loss: 0.04657
+[2026-09-07 01:28:02] [INFO] pipeline:   [lightgbm] Fold 2/5 Log-Loss: 0.02420
+[2026-09-07 01:28:02] [INFO] pipeline:   [lightgbm] Fold 3/5 Log-Loss: 0.05361
+[2026-09-07 01:28:02] [INFO] pipeline:   [lightgbm] Fold 4/5 Log-Loss: 0.03244
+[2026-09-07 01:28:02] [INFO] pipeline:   [lightgbm] Fold 5/5 Log-Loss: 0.01555
+[2026-09-07 01:28:02] [INFO] pipeline:   [lightgbm] CV Log-Loss: 0.03447 (+/- 0.01400)
+[2026-09-07 01:28:02] [INFO] pipeline:   [lightgbm] Fitting final model on full training set...
+[2026-09-07 01:28:02] [INFO] pipeline:   [lightgbm] Computing test prediction probabilities...
+[2026-09-07 01:28:02] [INFO] pipeline:   [lightgbm] Saved model checkpoint to outputs\models\lightgbm.joblib
+[2026-09-07 01:28:02] [INFO] pipeline: Saved CV summary to outputs\reports\cv_training_summary.csv
+[2026-09-07 01:28:02] [INFO] pipeline: >>> Running Phase 4: Computational Efficiency Benchmarking...
+[2026-09-07 01:28:03] [INFO] pipeline: Saved computational benchmarks to outputs\reports\efficiency_benchmarks.csv
+[2026-09-07 01:28:03] [INFO] pipeline: >>> Running Phase 4: Probability Calibration Analysis (Brier, ECE, Platt, Isotonic)...
+[2026-09-07 01:28:03] [INFO] pipeline: Saved calibration analysis to outputs\reports\calibration_metrics.csv
+[2026-09-07 01:28:03] [INFO] pipeline: >>> Running Phase 5: SHAP Explainability & Explanation Stability...
+[2026-09-07 01:28:09] [INFO] pipeline:   [random_forest] SHAP additive property verified: True
+[2026-09-07 01:31:14] [INFO] pipeline: ======================================================================
+[2026-09-07 01:31:14] [INFO] pipeline: DATASET-AGNOSTIC EXPLAINABLE ML PIPELINE (PHASES 1 - 6)
+[2026-09-07 01:31:14] [INFO] pipeline: ======================================================================
+[2026-09-07 01:31:14] [INFO] pipeline: Classification Mode:   BINARY
+[2026-09-07 01:31:14] [INFO] pipeline: Mutual Info Top-k:     15
+[2026-09-07 01:31:14] [INFO] pipeline: CV Folds:              5
+[2026-09-07 01:31:14] [INFO] pipeline: Benchmarking Enabled:  True
+[2026-09-07 01:31:14] [INFO] pipeline: Calibration Enabled:   True
+[2026-09-07 01:31:14] [INFO] pipeline: Explainability/SHAP:   True
+[2026-09-07 01:31:14] [INFO] pipeline: Robustness Suite:      True
+[2026-09-07 01:31:14] [INFO] pipeline: Loading CSV: cicids2017_sample.csv (1.03 MB)...
+[2026-09-07 01:31:14] [INFO] pipeline: Loaded dataset total shape: 5,000 rows x 22 columns
+[2026-09-07 01:31:14] [INFO] pipeline: >>> Running Module 1: Data Preprocessing & Normalization...
+[2026-09-07 01:31:14] [INFO] pipeline: Train split: 4,000 samples | Test split: 1,000 samples
+[2026-09-07 01:31:15] [INFO] pipeline: Module 1 complete in 0.38s. Skewed features: 11
+[2026-09-07 01:31:15] [INFO] pipeline: >>> Running Module 2: Feature Selection (Top-k=15)...
+[2026-09-07 01:31:15] [INFO] pipeline: Module 2 complete in 0.63s. Selected 15 features.
+[2026-09-07 01:31:15] [INFO] pipeline: Top 5 features: ['Fwd Header Length', 'Total Fwd Packets', 'Subflow Fwd Packets', 'Flow Bytes/s', 'SYN Flag Count']
+[2026-09-07 01:31:15] [INFO] pipeline: >>> Running Module 3: Predictive Modeling Framework (Algorithm 2)...
+[2026-09-07 01:31:15] [INFO] pipeline: --- Training Model: random_forest ---
+[2026-09-07 01:31:18] [INFO] pipeline:   [random_forest] Fold 1/5 Log-Loss: 0.04751
+[2026-09-07 01:31:20] [INFO] pipeline:   [random_forest] Fold 2/5 Log-Loss: 0.02525
+[2026-09-07 01:31:21] [INFO] pipeline:   [random_forest] Fold 3/5 Log-Loss: 0.09219
+[2026-09-07 01:31:23] [INFO] pipeline:   [random_forest] Fold 4/5 Log-Loss: 0.04248
+[2026-09-07 01:31:25] [INFO] pipeline:   [random_forest] Fold 5/5 Log-Loss: 0.03098
+[2026-09-07 01:31:25] [INFO] pipeline:   [random_forest] CV Log-Loss: 0.04768 (+/- 0.02362)
+[2026-09-07 01:31:25] [INFO] pipeline:   [random_forest] Fitting final model on full training set...
+[2026-09-07 01:31:27] [INFO] pipeline:   [random_forest] Computing test prediction probabilities...
+[2026-09-07 01:31:27] [INFO] pipeline:   [random_forest] Saved model checkpoint to outputs\models\random_forest.joblib
+[2026-09-07 01:31:27] [INFO] pipeline: --- Training Model: xgboost ---
+[2026-09-07 01:31:27] [INFO] pipeline:   [xgboost] Fold 1/5 Log-Loss: 0.03687
+[2026-09-07 01:31:28] [INFO] pipeline:   [xgboost] Fold 2/5 Log-Loss: 0.02356
+[2026-09-07 01:31:28] [INFO] pipeline:   [xgboost] Fold 3/5 Log-Loss: 0.05304
+[2026-09-07 01:31:29] [INFO] pipeline:   [xgboost] Fold 4/5 Log-Loss: 0.02739
+[2026-09-07 01:31:29] [INFO] pipeline:   [xgboost] Fold 5/5 Log-Loss: 0.02201
+[2026-09-07 01:31:29] [INFO] pipeline:   [xgboost] CV Log-Loss: 0.03257 (+/- 0.01146)
+[2026-09-07 01:31:29] [INFO] pipeline:   [xgboost] Fitting final model on full training set...
+[2026-09-07 01:31:29] [INFO] pipeline:   [xgboost] Computing test prediction probabilities...
+[2026-09-07 01:31:29] [INFO] pipeline:   [xgboost] Saved model checkpoint to outputs\models\xgboost.joblib
+[2026-09-07 01:31:29] [INFO] pipeline: --- Training Model: lightgbm ---
+[2026-09-07 01:31:30] [INFO] pipeline:   [lightgbm] Fold 1/5 Log-Loss: 0.04657
+[2026-09-07 01:31:30] [INFO] pipeline:   [lightgbm] Fold 2/5 Log-Loss: 0.02420
+[2026-09-07 01:31:30] [INFO] pipeline:   [lightgbm] Fold 3/5 Log-Loss: 0.05361
+[2026-09-07 01:31:30] [INFO] pipeline:   [lightgbm] Fold 4/5 Log-Loss: 0.03244
+[2026-09-07 01:31:31] [INFO] pipeline:   [lightgbm] Fold 5/5 Log-Loss: 0.01555
+[2026-09-07 01:31:31] [INFO] pipeline:   [lightgbm] CV Log-Loss: 0.03447 (+/- 0.01400)
+[2026-09-07 01:31:31] [INFO] pipeline:   [lightgbm] Fitting final model on full training set...
+[2026-09-07 01:31:31] [INFO] pipeline:   [lightgbm] Computing test prediction probabilities...
+[2026-09-07 01:31:31] [INFO] pipeline:   [lightgbm] Saved model checkpoint to outputs\models\lightgbm.joblib
+[2026-09-07 01:31:31] [INFO] pipeline: Saved CV summary to outputs\reports\cv_training_summary.csv
+[2026-09-07 01:31:31] [INFO] pipeline: >>> Running Phase 4: Computational Efficiency Benchmarking...
+[2026-09-07 01:31:31] [INFO] pipeline: Saved computational benchmarks to outputs\reports\efficiency_benchmarks.csv
+[2026-09-07 01:31:31] [INFO] pipeline: >>> Running Phase 4: Probability Calibration Analysis (Brier, ECE, Platt, Isotonic)...
+[2026-09-07 01:31:31] [INFO] pipeline: Saved calibration analysis to outputs\reports\calibration_metrics.csv
+[2026-09-07 01:31:31] [INFO] pipeline: >>> Running Phase 5: SHAP Explainability & Explanation Stability...
+[2026-09-07 01:31:32] [INFO] pipeline:   [random_forest] SHAP additive property verified: True
+[2026-09-07 01:31:32] [INFO] pipeline:   [xgboost] SHAP additive property verified: True
+[2026-09-07 01:31:32] [INFO] pipeline:   [lightgbm] SHAP additive property verified: True
+[2026-09-07 01:31:32] [INFO] pipeline: Saved SHAP global importance to outputs\reports\shap_global_importance.csv
+[2026-09-07 01:31:32] [INFO] pipeline:   Calculating Explanation Stability across CV folds...
+[2026-09-07 01:31:36] [INFO] pipeline: Saved explanation stability summary to outputs\reports\explanation_stability.csv
+[2026-09-07 01:31:36] [INFO] pipeline: >>> Running Phase 6: Robustness & Perturbation Suite...
+[2026-09-07 01:31:37] [INFO] pipeline: Saved robustness degradation report to outputs\reports\robustness_degradation.csv
+[2026-09-07 01:31:37] [INFO] pipeline: >>> Running Phase 7: Statistical Analysis & Hypothesis Testing...
+[2026-09-07 01:33:28] [INFO] pipeline: ======================================================================
+[2026-09-07 01:33:28] [INFO] pipeline: DATASET-AGNOSTIC EXPLAINABLE ML PIPELINE (PHASES 1 - 6)
+[2026-09-07 01:33:28] [INFO] pipeline: ======================================================================
+[2026-09-07 01:33:28] [INFO] pipeline: Classification Mode:   BINARY
+[2026-09-07 01:33:28] [INFO] pipeline: Mutual Info Top-k:     15
+[2026-09-07 01:33:28] [INFO] pipeline: CV Folds:              5
+[2026-09-07 01:33:28] [INFO] pipeline: Benchmarking Enabled:  True
+[2026-09-07 01:33:28] [INFO] pipeline: Calibration Enabled:   True
+[2026-09-07 01:33:28] [INFO] pipeline: Explainability/SHAP:   True
+[2026-09-07 01:33:28] [INFO] pipeline: Robustness Suite:      True
+[2026-09-07 01:33:28] [INFO] pipeline: Loading CSV: cicids2017_sample.csv (1.03 MB)...
+[2026-09-07 01:33:28] [INFO] pipeline: Loaded dataset total shape: 5,000 rows x 22 columns
+[2026-09-07 01:33:28] [INFO] pipeline: >>> Running Module 1: Data Preprocessing & Normalization...
+[2026-09-07 01:34:14] [INFO] pipeline: ======================================================================
+[2026-09-07 01:34:14] [INFO] pipeline: DATASET-AGNOSTIC EXPLAINABLE ML PIPELINE (PHASES 1 - 6)
+[2026-09-07 01:34:14] [INFO] pipeline: ======================================================================
+[2026-09-07 01:34:14] [INFO] pipeline: Classification Mode:   BINARY
+[2026-09-07 01:34:14] [INFO] pipeline: Mutual Info Top-k:     15
+[2026-09-07 01:34:14] [INFO] pipeline: CV Folds:              5
+[2026-09-07 01:34:14] [INFO] pipeline: Benchmarking Enabled:  True
+[2026-09-07 01:34:14] [INFO] pipeline: Calibration Enabled:   True
+[2026-09-07 01:34:14] [INFO] pipeline: Explainability/SHAP:   True
+[2026-09-07 01:34:14] [INFO] pipeline: Robustness Suite:      True
+[2026-09-07 01:34:14] [INFO] pipeline: Loading CSV: cicids2017_sample.csv (1.03 MB)...
+[2026-09-07 01:34:14] [INFO] pipeline: Loaded dataset total shape: 5,000 rows x 22 columns
+[2026-09-07 01:34:14] [INFO] pipeline: >>> Running Module 1: Data Preprocessing & Normalization...
+[2026-09-07 01:34:14] [INFO] pipeline: Train split: 4,000 samples | Test split: 1,000 samples
+[2026-09-07 01:34:14] [INFO] pipeline: Module 1 complete in 0.35s. Skewed features: 11
+[2026-09-07 01:34:14] [INFO] pipeline: >>> Running Module 2: Feature Selection (Top-k=15)...
+[2026-09-07 01:34:15] [INFO] pipeline: Module 2 complete in 0.50s. Selected 15 features.
+[2026-09-07 01:34:15] [INFO] pipeline: Top 5 features: ['Fwd Header Length', 'Total Fwd Packets', 'Subflow Fwd Packets', 'Flow Bytes/s', 'SYN Flag Count']
+[2026-09-07 01:34:15] [INFO] pipeline: >>> Running Module 3: Predictive Modeling Framework (Algorithm 2)...
+[2026-09-07 01:34:15] [INFO] pipeline: --- Training Model: random_forest ---
+[2026-09-07 01:34:16] [INFO] pipeline:   [random_forest] Fold 1/5 Log-Loss: 0.04751
+[2026-09-07 01:34:18] [INFO] pipeline:   [random_forest] Fold 2/5 Log-Loss: 0.02525
+[2026-09-07 01:34:19] [INFO] pipeline:   [random_forest] Fold 3/5 Log-Loss: 0.09219
+[2026-09-07 01:34:21] [INFO] pipeline:   [random_forest] Fold 4/5 Log-Loss: 0.04248
+[2026-09-07 01:34:23] [INFO] pipeline:   [random_forest] Fold 5/5 Log-Loss: 0.03098
+[2026-09-07 01:34:23] [INFO] pipeline:   [random_forest] CV Log-Loss: 0.04768 (+/- 0.02362)
+[2026-09-07 01:34:23] [INFO] pipeline:   [random_forest] Fitting final model on full training set...
+[2026-09-07 01:34:24] [INFO] pipeline:   [random_forest] Computing test prediction probabilities...
+[2026-09-07 01:34:24] [INFO] pipeline:   [random_forest] Saved model checkpoint to outputs\models\random_forest.joblib
+[2026-09-07 01:34:24] [INFO] pipeline: --- Training Model: xgboost ---
+[2026-09-07 01:34:25] [INFO] pipeline:   [xgboost] Fold 1/5 Log-Loss: 0.03687
+[2026-09-07 01:34:25] [INFO] pipeline:   [xgboost] Fold 2/5 Log-Loss: 0.02356
+[2026-09-07 01:34:25] [INFO] pipeline:   [xgboost] Fold 3/5 Log-Loss: 0.05304
+[2026-09-07 01:34:26] [INFO] pipeline:   [xgboost] Fold 4/5 Log-Loss: 0.02739
+[2026-09-07 01:34:26] [INFO] pipeline:   [xgboost] Fold 5/5 Log-Loss: 0.02201
+[2026-09-07 01:34:26] [INFO] pipeline:   [xgboost] CV Log-Loss: 0.03257 (+/- 0.01146)
+[2026-09-07 01:34:26] [INFO] pipeline:   [xgboost] Fitting final model on full training set...
+[2026-09-07 01:34:27] [INFO] pipeline:   [xgboost] Computing test prediction probabilities...
+[2026-09-07 01:34:27] [INFO] pipeline:   [xgboost] Saved model checkpoint to outputs\models\xgboost.joblib
+[2026-09-07 01:34:27] [INFO] pipeline: --- Training Model: lightgbm ---
+[2026-09-07 01:34:27] [INFO] pipeline:   [lightgbm] Fold 1/5 Log-Loss: 0.04657
+[2026-09-07 01:34:27] [INFO] pipeline:   [lightgbm] Fold 2/5 Log-Loss: 0.02420
+[2026-09-07 01:34:27] [INFO] pipeline:   [lightgbm] Fold 3/5 Log-Loss: 0.05361
+[2026-09-07 01:34:27] [INFO] pipeline:   [lightgbm] Fold 4/5 Log-Loss: 0.03244
+[2026-09-07 01:34:27] [INFO] pipeline:   [lightgbm] Fold 5/5 Log-Loss: 0.01555
+[2026-09-07 01:34:27] [INFO] pipeline:   [lightgbm] CV Log-Loss: 0.03447 (+/- 0.01400)
+[2026-09-07 01:34:27] [INFO] pipeline:   [lightgbm] Fitting final model on full training set...
+[2026-09-07 01:34:27] [INFO] pipeline:   [lightgbm] Computing test prediction probabilities...
+[2026-09-07 01:34:28] [INFO] pipeline:   [lightgbm] Saved model checkpoint to outputs\models\lightgbm.joblib
+[2026-09-07 01:34:28] [INFO] pipeline: Saved CV summary to outputs\reports\cv_training_summary.csv
+[2026-09-07 01:34:28] [INFO] pipeline: >>> Running Phase 4: Computational Efficiency Benchmarking...
+[2026-09-07 01:34:28] [INFO] pipeline: Saved computational benchmarks to outputs\reports\efficiency_benchmarks.csv
+[2026-09-07 01:34:28] [INFO] pipeline: >>> Running Phase 4: Probability Calibration Analysis (Brier, ECE, Platt, Isotonic)...
+[2026-09-07 01:34:28] [INFO] pipeline: Saved calibration analysis to outputs\reports\calibration_metrics.csv
+[2026-09-07 01:34:28] [INFO] pipeline: >>> Running Phase 5: SHAP Explainability & Explanation Stability...
+[2026-09-07 01:34:29] [INFO] pipeline:   [random_forest] SHAP additive property verified: True
+[2026-09-07 01:34:29] [INFO] pipeline:   [xgboost] SHAP additive property verified: True
+[2026-09-07 01:34:29] [INFO] pipeline:   [lightgbm] SHAP additive property verified: True
+[2026-09-07 01:34:29] [INFO] pipeline: Saved SHAP global importance to outputs\reports\shap_global_importance.csv
+[2026-09-07 01:34:29] [INFO] pipeline:   Calculating Explanation Stability across CV folds...
+[2026-09-07 01:34:32] [INFO] pipeline: Saved explanation stability summary to outputs\reports\explanation_stability.csv
+[2026-09-07 01:34:32] [INFO] pipeline: >>> Running Phase 6: Robustness & Perturbation Suite...
+[2026-09-07 01:34:33] [INFO] pipeline: Saved robustness degradation report to outputs\reports\robustness_degradation.csv
+[2026-09-07 01:34:33] [INFO] pipeline: >>> Running Phase 7: Statistical Analysis & Hypothesis Testing...
+[2026-09-07 01:34:36] [INFO] pipeline: Saved bootstrap confidence intervals to outputs\reports\bootstrap_ci.csv
+[2026-09-07 01:34:36] [INFO] pipeline: Friedman Omnibus Test p-value: 0.00066 (Significant: True)
+[2026-09-07 01:34:36] [INFO] pipeline: Saved statistical comparisons to outputs\reports\statistical_comparisons.csv
+[2026-09-07 01:34:36] [INFO] pipeline: >>> Running Phase 8: Publication-Quality Plots & Research Report...
+[2026-09-07 01:34:41] [INFO] pipeline: Saved publication-quality plots to outputs\plots
+[2026-09-07 01:34:41] [INFO] pipeline: Saved comprehensive research experiment report to outputs\reports\experiment_report.md
+[2026-09-07 01:34:41] [INFO] pipeline: ======================================================================
+[2026-09-07 01:34:41] [INFO] pipeline: ALL PHASES (1 - 8) COMPLETED SUCCESSFULLY!
+[2026-09-07 01:34:41] [INFO] pipeline: ======================================================================
+[2026-09-07 01:41:15] [INFO] pipeline: ======================================================================
+[2026-09-07 01:41:15] [INFO] pipeline: DATASET-AGNOSTIC EXPLAINABLE ML PIPELINE (PHASES 1 - 6)
+[2026-09-07 01:41:15] [INFO] pipeline: ======================================================================
+[2026-09-07 01:41:15] [INFO] pipeline: Classification Mode:   BINARY
+[2026-09-07 01:41:15] [INFO] pipeline: Mutual Info Top-k:     15
+[2026-09-07 01:41:15] [INFO] pipeline: CV Folds:              5
+[2026-09-07 01:41:15] [INFO] pipeline: Benchmarking Enabled:  True
+[2026-09-07 01:41:15] [INFO] pipeline: Calibration Enabled:   True
+[2026-09-07 01:41:15] [INFO] pipeline: Explainability/SHAP:   True
+[2026-09-07 01:41:15] [INFO] pipeline: Robustness Suite:      True
+[2026-09-07 01:41:15] [INFO] pipeline: Loading CSV: cicids2017_generated_sample.csv (1.03 MB)...
+[2026-09-07 01:41:15] [INFO] pipeline: Loaded dataset total shape: 5,000 rows x 22 columns
+[2026-09-07 01:41:15] [INFO] pipeline: >>> Running Module 1: Data Preprocessing & Normalization...
+[2026-09-07 01:41:15] [INFO] pipeline: Train split: 4,000 samples | Test split: 1,000 samples
+[2026-09-07 01:41:15] [INFO] pipeline: Module 1 complete in 0.36s. Skewed features: 11
+[2026-09-07 01:41:15] [INFO] pipeline: >>> Running Module 2: Feature Selection (Top-k=15)...
+[2026-09-07 01:41:16] [INFO] pipeline: Module 2 complete in 0.57s. Selected 15 features.
+[2026-09-07 01:41:16] [INFO] pipeline: Top 5 features: ['Fwd Header Length', 'Total Fwd Packets', 'Subflow Fwd Packets', 'Flow Bytes/s', 'SYN Flag Count']
+[2026-09-07 01:41:16] [INFO] pipeline: >>> Running Module 3: Predictive Modeling Framework (Algorithm 2)...
+[2026-09-07 01:41:16] [INFO] pipeline: --- Training Model: random_forest ---
+[2026-09-07 01:41:17] [INFO] pipeline:   [random_forest] Fold 1/5 Log-Loss: 0.04751
+[2026-09-07 01:41:19] [INFO] pipeline:   [random_forest] Fold 2/5 Log-Loss: 0.02525
+[2026-09-07 01:41:21] [INFO] pipeline:   [random_forest] Fold 3/5 Log-Loss: 0.09219
+[2026-09-07 01:41:22] [INFO] pipeline:   [random_forest] Fold 4/5 Log-Loss: 0.04248
+[2026-09-07 01:41:24] [INFO] pipeline:   [random_forest] Fold 5/5 Log-Loss: 0.03098
+[2026-09-07 01:41:24] [INFO] pipeline:   [random_forest] CV Log-Loss: 0.04768 (+/- 0.02362)
+[2026-09-07 01:41:24] [INFO] pipeline:   [random_forest] Fitting final model on full training set...
+[2026-09-07 01:41:25] [INFO] pipeline:   [random_forest] Computing test prediction probabilities...
+[2026-09-07 01:41:25] [INFO] pipeline:   [random_forest] Saved model checkpoint to outputs\models\random_forest.joblib
+[2026-09-07 01:41:25] [INFO] pipeline: --- Training Model: xgboost ---
+[2026-09-07 01:41:26] [INFO] pipeline:   [xgboost] Fold 1/5 Log-Loss: 0.03687
+[2026-09-07 01:41:26] [INFO] pipeline:   [xgboost] Fold 2/5 Log-Loss: 0.02356
+[2026-09-07 01:41:27] [INFO] pipeline:   [xgboost] Fold 3/5 Log-Loss: 0.05304
+[2026-09-07 01:41:27] [INFO] pipeline:   [xgboost] Fold 4/5 Log-Loss: 0.02739
+[2026-09-07 01:41:28] [INFO] pipeline:   [xgboost] Fold 5/5 Log-Loss: 0.02201
+[2026-09-07 01:41:28] [INFO] pipeline:   [xgboost] CV Log-Loss: 0.03257 (+/- 0.01146)
+[2026-09-07 01:41:28] [INFO] pipeline:   [xgboost] Fitting final model on full training set...
+[2026-09-07 01:41:28] [INFO] pipeline:   [xgboost] Computing test prediction probabilities...
+[2026-09-07 01:41:28] [INFO] pipeline:   [xgboost] Saved model checkpoint to outputs\models\xgboost.joblib
+[2026-09-07 01:41:28] [INFO] pipeline: --- Training Model: lightgbm ---
+[2026-09-07 01:41:28] [INFO] pipeline:   [lightgbm] Fold 1/5 Log-Loss: 0.04657
+[2026-09-07 01:41:28] [INFO] pipeline:   [lightgbm] Fold 2/5 Log-Loss: 0.02420
+[2026-09-07 01:41:28] [INFO] pipeline:   [lightgbm] Fold 3/5 Log-Loss: 0.05361
+[2026-09-07 01:41:29] [INFO] pipeline:   [lightgbm] Fold 4/5 Log-Loss: 0.03244
+[2026-09-07 01:41:29] [INFO] pipeline:   [lightgbm] Fold 5/5 Log-Loss: 0.01555
+[2026-09-07 01:41:29] [INFO] pipeline:   [lightgbm] CV Log-Loss: 0.03447 (+/- 0.01400)
+[2026-09-07 01:41:29] [INFO] pipeline:   [lightgbm] Fitting final model on full training set...
+[2026-09-07 01:41:29] [INFO] pipeline:   [lightgbm] Computing test prediction probabilities...
+[2026-09-07 01:41:29] [INFO] pipeline:   [lightgbm] Saved model checkpoint to outputs\models\lightgbm.joblib
+[2026-09-07 01:41:29] [INFO] pipeline: Saved CV summary to outputs\reports\cv_training_summary.csv
+[2026-09-07 01:41:29] [INFO] pipeline: >>> Running Phase 4: Computational Efficiency Benchmarking...
+[2026-09-07 01:41:29] [INFO] pipeline: Saved computational benchmarks to outputs\reports\efficiency_benchmarks.csv
+[2026-09-07 01:41:29] [INFO] pipeline: >>> Running Phase 4: Probability Calibration Analysis (Brier, ECE, Platt, Isotonic)...
+[2026-09-07 01:41:30] [INFO] pipeline: Saved calibration analysis to outputs\reports\calibration_metrics.csv
+[2026-09-07 01:41:30] [INFO] pipeline: >>> Running Phase 5: SHAP Explainability & Explanation Stability...
+[2026-09-07 01:41:30] [INFO] pipeline:   [random_forest] SHAP additive property verified: True
+[2026-09-07 01:41:30] [INFO] pipeline:   [xgboost] SHAP additive property verified: True
+[2026-09-07 01:41:31] [INFO] pipeline:   [lightgbm] SHAP additive property verified: True
+[2026-09-07 01:41:31] [INFO] pipeline: Saved SHAP global importance to outputs\reports\shap_global_importance.csv
+[2026-09-07 01:41:31] [INFO] pipeline:   Calculating Explanation Stability across CV folds...
+[2026-09-07 01:41:34] [INFO] pipeline: Saved explanation stability summary to outputs\reports\explanation_stability.csv
+[2026-09-07 01:41:34] [INFO] pipeline: >>> Running Phase 6: Robustness & Perturbation Suite...
+[2026-09-07 01:41:35] [INFO] pipeline: Saved robustness degradation report to outputs\reports\robustness_degradation.csv
+[2026-09-07 01:41:35] [INFO] pipeline: >>> Running Phase 7: Statistical Analysis & Hypothesis Testing...
+[2026-09-07 01:41:38] [INFO] pipeline: Saved bootstrap confidence intervals to outputs\reports\bootstrap_ci.csv
+[2026-09-07 01:41:38] [INFO] pipeline: Friedman Omnibus Test p-value: 0.00066 (Significant: True)
+[2026-09-07 01:41:38] [INFO] pipeline: Saved statistical comparisons to outputs\reports\statistical_comparisons.csv
+[2026-09-07 01:41:38] [INFO] pipeline: >>> Running Phase 8: Publication-Quality Plots & Research Report...
+[2026-09-07 01:41:42] [INFO] pipeline: Saved publication-quality plots to outputs\plots
+[2026-09-07 01:41:42] [INFO] pipeline: Saved comprehensive research experiment report to outputs\reports\experiment_report.md
+[2026-09-07 01:41:42] [INFO] pipeline: ======================================================================
+[2026-09-07 01:41:42] [INFO] pipeline: ALL PHASES (1 - 8) COMPLETED SUCCESSFULLY!
+[2026-09-07 01:41:42] [INFO] pipeline: ======================================================================
+[2026-09-07 01:57:46] [INFO] pipeline: ======================================================================
+[2026-09-07 01:57:46] [INFO] pipeline: DATASET-AGNOSTIC EXPLAINABLE ML PIPELINE (PHASES 1 - 6)
+[2026-09-07 01:57:46] [INFO] pipeline: ======================================================================
+[2026-09-07 01:57:46] [INFO] pipeline: Classification Mode:   BINARY
+[2026-09-07 01:57:46] [INFO] pipeline: Mutual Info Top-k:     15
+[2026-09-07 01:57:46] [INFO] pipeline: CV Folds:              5
+[2026-09-07 01:57:46] [INFO] pipeline: Benchmarking Enabled:  True
+[2026-09-07 01:57:46] [INFO] pipeline: Calibration Enabled:   True
+[2026-09-07 01:57:46] [INFO] pipeline: Explainability/SHAP:   True
+[2026-09-07 01:57:46] [INFO] pipeline: Robustness Suite:      True
+[2026-09-07 01:57:46] [INFO] pipeline: Loading CSV: cicids2017_generated_sample.csv (1.03 MB)...
+[2026-09-07 01:57:46] [INFO] pipeline: Loaded dataset total shape: 5,000 rows x 22 columns
+[2026-09-07 01:57:46] [INFO] pipeline: >>> Running Module 1: Data Preprocessing & Normalization...
+[2026-09-07 01:57:46] [INFO] pipeline: Train split: 4,000 samples | Test split: 1,000 samples
+[2026-09-07 01:57:47] [INFO] pipeline: Module 1 complete in 0.41s. Skewed features: 11
+[2026-09-07 01:57:47] [INFO] pipeline: >>> Running Module 2: Feature Selection (Top-k=15)...
+[2026-09-07 01:57:47] [INFO] pipeline: Module 2 complete in 0.55s. Selected 15 features.
+[2026-09-07 01:57:47] [INFO] pipeline: Top 5 features: ['Fwd Header Length', 'Total Fwd Packets', 'Subflow Fwd Packets', 'Flow Bytes/s', 'SYN Flag Count']
+[2026-09-07 01:57:47] [INFO] pipeline: >>> Running Module 3: Predictive Modeling Framework (Algorithm 2)...
+[2026-09-07 01:57:47] [INFO] pipeline: --- Training Model: random_forest ---
+[2026-09-07 01:57:49] [INFO] pipeline:   [random_forest] Fold 1/5 Log-Loss: 0.04751
+[2026-09-07 01:57:51] [INFO] pipeline:   [random_forest] Fold 2/5 Log-Loss: 0.02525
+[2026-09-07 01:57:52] [INFO] pipeline:   [random_forest] Fold 3/5 Log-Loss: 0.09219
+[2026-09-07 01:57:54] [INFO] pipeline:   [random_forest] Fold 4/5 Log-Loss: 0.04248
+[2026-09-07 01:57:55] [INFO] pipeline:   [random_forest] Fold 5/5 Log-Loss: 0.03098
+[2026-09-07 01:57:55] [INFO] pipeline:   [random_forest] CV Log-Loss: 0.04768 (+/- 0.02362)
+[2026-09-07 01:57:55] [INFO] pipeline:   [random_forest] Fitting final model on full training set...
+[2026-09-07 01:57:57] [INFO] pipeline:   [random_forest] Computing test prediction probabilities...
+[2026-09-07 01:57:57] [INFO] pipeline:   [random_forest] Saved model checkpoint to outputs\models\random_forest.joblib
+[2026-09-07 01:57:57] [INFO] pipeline: --- Training Model: xgboost ---
+[2026-09-07 01:57:58] [INFO] pipeline:   [xgboost] Fold 1/5 Log-Loss: 0.03687
+[2026-09-07 01:57:58] [INFO] pipeline:   [xgboost] Fold 2/5 Log-Loss: 0.02356
+[2026-09-07 01:57:58] [INFO] pipeline:   [xgboost] Fold 3/5 Log-Loss: 0.05304
+[2026-09-07 01:57:59] [INFO] pipeline:   [xgboost] Fold 4/5 Log-Loss: 0.02739
+[2026-09-07 01:57:59] [INFO] pipeline:   [xgboost] Fold 5/5 Log-Loss: 0.02201
+[2026-09-07 01:57:59] [INFO] pipeline:   [xgboost] CV Log-Loss: 0.03257 (+/- 0.01146)
+[2026-09-07 01:57:59] [INFO] pipeline:   [xgboost] Fitting final model on full training set...
+[2026-09-07 01:58:00] [INFO] pipeline:   [xgboost] Computing test prediction probabilities...
+[2026-09-07 01:58:00] [INFO] pipeline:   [xgboost] Saved model checkpoint to outputs\models\xgboost.joblib
+[2026-09-07 01:58:00] [INFO] pipeline: --- Training Model: lightgbm ---
+[2026-09-07 01:58:00] [INFO] pipeline:   [lightgbm] Fold 1/5 Log-Loss: 0.04657
+[2026-09-07 01:58:00] [INFO] pipeline:   [lightgbm] Fold 2/5 Log-Loss: 0.02420
+[2026-09-07 01:58:00] [INFO] pipeline:   [lightgbm] Fold 3/5 Log-Loss: 0.05361
+[2026-09-07 01:58:00] [INFO] pipeline:   [lightgbm] Fold 4/5 Log-Loss: 0.03244
+[2026-09-07 01:58:00] [INFO] pipeline:   [lightgbm] Fold 5/5 Log-Loss: 0.01555
+[2026-09-07 01:58:00] [INFO] pipeline:   [lightgbm] CV Log-Loss: 0.03447 (+/- 0.01400)
+[2026-09-07 01:58:00] [INFO] pipeline:   [lightgbm] Fitting final model on full training set...
+[2026-09-07 01:58:01] [INFO] pipeline:   [lightgbm] Computing test prediction probabilities...
+[2026-09-07 01:58:01] [INFO] pipeline:   [lightgbm] Saved model checkpoint to outputs\models\lightgbm.joblib
+[2026-09-07 01:58:01] [INFO] pipeline: Saved CV summary to outputs\reports\cv_training_summary.csv
+[2026-09-07 01:58:01] [INFO] pipeline: >>> Running Phase 4: Computational Efficiency Benchmarking...
+[2026-09-07 01:58:01] [INFO] pipeline: Saved computational benchmarks to outputs\reports\efficiency_benchmarks.csv
+[2026-09-07 01:58:01] [INFO] pipeline: >>> Running Phase 4: Probability Calibration Analysis (Brier, ECE, Platt, Isotonic)...
+[2026-09-07 01:58:01] [INFO] pipeline: Saved calibration analysis to outputs\reports\calibration_metrics.csv
+[2026-09-07 01:58:01] [INFO] pipeline: >>> Running Phase 5: SHAP Explainability & Explanation Stability...
+[2026-09-07 01:58:02] [INFO] pipeline:   [random_forest] SHAP additive property verified: True
+[2026-09-07 01:58:02] [INFO] pipeline:   [xgboost] SHAP additive property verified: True
+[2026-09-07 01:58:02] [INFO] pipeline:   [lightgbm] SHAP additive property verified: True
+[2026-09-07 01:58:02] [INFO] pipeline: Saved SHAP global importance to outputs\reports\shap_global_importance.csv
+[2026-09-07 01:58:02] [INFO] pipeline:   Calculating Explanation Stability across CV folds...
+[2026-09-07 01:58:05] [INFO] pipeline: Saved explanation stability summary to outputs\reports\explanation_stability.csv
+[2026-09-07 01:58:05] [INFO] pipeline: >>> Running Phase 6: Robustness & Perturbation Suite...
+[2026-09-07 01:58:06] [INFO] pipeline: Saved robustness degradation report to outputs\reports\robustness_degradation.csv
+[2026-09-07 01:58:06] [INFO] pipeline: >>> Running Phase 7: Statistical Analysis & Hypothesis Testing...
+[2026-09-07 01:58:10] [INFO] pipeline: Saved bootstrap confidence intervals to outputs\reports\bootstrap_ci.csv
+[2026-09-07 01:58:10] [INFO] pipeline: Friedman Omnibus Test p-value: 0.00066 (Significant: True)
+[2026-09-07 01:58:10] [INFO] pipeline: Saved statistical comparisons to outputs\reports\statistical_comparisons.csv
+[2026-09-07 01:58:10] [INFO] pipeline: >>> Running Phase 8: Publication-Quality Plots & Research Report...
+[2026-09-07 01:58:14] [INFO] pipeline: Saved publication-quality plots to outputs\plots
+[2026-09-07 01:58:14] [INFO] pipeline: Saved comprehensive research experiment report to outputs\reports\experiment_report.md
+[2026-09-07 01:58:14] [INFO] pipeline: ======================================================================
+[2026-09-07 01:58:14] [INFO] pipeline: ALL PHASES (1 - 8) COMPLETED SUCCESSFULLY!
+[2026-09-07 01:58:14] [INFO] pipeline: ======================================================================
+[2026-09-07 02:10:51] [INFO] pipeline: ======================================================================
+[2026-09-07 02:10:51] [INFO] pipeline: DATASET-AGNOSTIC EXPLAINABLE ML PIPELINE (PHASES 1 - 6)
+[2026-09-07 02:10:51] [INFO] pipeline: ======================================================================
+[2026-09-07 02:10:51] [INFO] pipeline: Classification Mode:   BINARY
+[2026-09-07 02:10:51] [INFO] pipeline: Mutual Info Top-k:     15
+[2026-09-07 02:10:51] [INFO] pipeline: CV Folds:              5
+[2026-09-07 02:10:51] [INFO] pipeline: Benchmarking Enabled:  True
+[2026-09-07 02:10:51] [INFO] pipeline: Calibration Enabled:   True
+[2026-09-07 02:10:51] [INFO] pipeline: Explainability/SHAP:   True
+[2026-09-07 02:10:51] [INFO] pipeline: Robustness Suite:      True
+[2026-09-07 02:10:51] [INFO] pipeline: Loading CSV: cicids2017_generated_sample.csv (1.03 MB)...
+[2026-09-07 02:10:51] [INFO] pipeline: Loaded dataset total shape: 5,000 rows x 22 columns
+[2026-09-07 02:10:51] [INFO] pipeline: >>> Running Module 1: Data Preprocessing & Normalization...
+[2026-09-07 02:10:51] [INFO] pipeline: Train split: 4,000 samples | Test split: 1,000 samples
+[2026-09-07 02:10:51] [INFO] pipeline: Module 1 complete in 0.52s. Skewed features: 11
+[2026-09-07 02:10:51] [INFO] pipeline: >>> Running Module 2: Feature Selection (Top-k=15)...
+[2026-09-07 02:10:52] [INFO] pipeline: Module 2 complete in 0.66s. Selected 15 features.
+[2026-09-07 02:10:52] [INFO] pipeline: Top 5 features: ['Fwd Header Length', 'Total Fwd Packets', 'Subflow Fwd Packets', 'Flow Bytes/s', 'SYN Flag Count']
+[2026-09-07 02:10:52] [INFO] pipeline: >>> Running Module 3: Predictive Modeling Framework (Algorithm 2)...
+[2026-09-07 02:10:52] [INFO] pipeline: --- Training Model: random_forest ---
+[2026-09-07 02:10:54] [INFO] pipeline:   [random_forest] Fold 1/5 Log-Loss: 0.04751
+[2026-09-07 02:10:56] [INFO] pipeline:   [random_forest] Fold 2/5 Log-Loss: 0.02525
+[2026-09-07 02:10:57] [INFO] pipeline:   [random_forest] Fold 3/5 Log-Loss: 0.09219
+[2026-09-07 02:10:59] [INFO] pipeline:   [random_forest] Fold 4/5 Log-Loss: 0.04248
+[2026-09-07 02:11:02] [INFO] pipeline:   [random_forest] Fold 5/5 Log-Loss: 0.03098
+[2026-09-07 02:11:02] [INFO] pipeline:   [random_forest] CV Log-Loss: 0.04768 (+/- 0.02362)
+[2026-09-07 02:11:02] [INFO] pipeline:   [random_forest] Fitting final model on full training set...
+[2026-09-07 02:11:04] [INFO] pipeline:   [random_forest] Computing test prediction probabilities...
+[2026-09-07 02:11:04] [INFO] pipeline:   [random_forest] Saved model checkpoint to outputs\models\random_forest.joblib
+[2026-09-07 02:11:04] [INFO] pipeline: --- Training Model: xgboost ---
+[2026-09-07 02:11:04] [INFO] pipeline:   [xgboost] Fold 1/5 Log-Loss: 0.03687
+[2026-09-07 02:11:05] [INFO] pipeline:   [xgboost] Fold 2/5 Log-Loss: 0.02356
+[2026-09-07 02:11:06] [INFO] pipeline:   [xgboost] Fold 3/5 Log-Loss: 0.05304
+[2026-09-07 02:11:06] [INFO] pipeline:   [xgboost] Fold 4/5 Log-Loss: 0.02739
+[2026-09-07 02:11:07] [INFO] pipeline:   [xgboost] Fold 5/5 Log-Loss: 0.02201
+[2026-09-07 02:11:07] [INFO] pipeline:   [xgboost] CV Log-Loss: 0.03257 (+/- 0.01146)
+[2026-09-07 02:11:07] [INFO] pipeline:   [xgboost] Fitting final model on full training set...
+[2026-09-07 02:11:07] [INFO] pipeline:   [xgboost] Computing test prediction probabilities...
+[2026-09-07 02:11:07] [INFO] pipeline:   [xgboost] Saved model checkpoint to outputs\models\xgboost.joblib
+[2026-09-07 02:11:07] [INFO] pipeline: --- Training Model: lightgbm ---
+[2026-09-07 02:11:07] [INFO] pipeline:   [lightgbm] Fold 1/5 Log-Loss: 0.04657
+[2026-09-07 02:11:07] [INFO] pipeline:   [lightgbm] Fold 2/5 Log-Loss: 0.02420
+[2026-09-07 02:11:08] [INFO] pipeline:   [lightgbm] Fold 3/5 Log-Loss: 0.05361
+[2026-09-07 02:11:08] [INFO] pipeline:   [lightgbm] Fold 4/5 Log-Loss: 0.03244
+[2026-09-07 02:11:08] [INFO] pipeline:   [lightgbm] Fold 5/5 Log-Loss: 0.01555
+[2026-09-07 02:11:08] [INFO] pipeline:   [lightgbm] CV Log-Loss: 0.03447 (+/- 0.01400)
+[2026-09-07 02:11:08] [INFO] pipeline:   [lightgbm] Fitting final model on full training set...
+[2026-09-07 02:11:08] [INFO] pipeline:   [lightgbm] Computing test prediction probabilities...
+[2026-09-07 02:11:08] [INFO] pipeline:   [lightgbm] Saved model checkpoint to outputs\models\lightgbm.joblib
+[2026-09-07 02:11:08] [INFO] pipeline: Saved CV summary to outputs\reports\cv_training_summary.csv
+[2026-09-07 02:11:08] [INFO] pipeline: >>> Running Phase 4: Computational Efficiency Benchmarking...
+[2026-09-07 02:11:09] [INFO] pipeline: Saved computational benchmarks to outputs\reports\efficiency_benchmarks.csv
+[2026-09-07 02:11:09] [INFO] pipeline: >>> Running Phase 4: Probability Calibration Analysis (Brier, ECE, Platt, Isotonic)...
+[2026-09-07 02:11:09] [INFO] pipeline: Saved calibration analysis to outputs\reports\calibration_metrics.csv
+[2026-09-07 02:11:09] [INFO] pipeline: >>> Running Phase 5: SHAP Explainability & Explanation Stability...
+[2026-09-07 02:11:10] [INFO] pipeline:   [random_forest] SHAP additive property verified: True
+[2026-09-07 02:11:10] [INFO] pipeline:   [xgboost] SHAP additive property verified: True
+[2026-09-07 02:11:10] [INFO] pipeline:   [lightgbm] SHAP additive property verified: True
+[2026-09-07 02:11:10] [INFO] pipeline: Saved SHAP global importance to outputs\reports\shap_global_importance.csv
+[2026-09-07 02:11:10] [INFO] pipeline:   Calculating Explanation Stability across CV folds...
+[2026-09-07 02:11:13] [INFO] pipeline: Saved explanation stability summary to outputs\reports\explanation_stability.csv
+[2026-09-07 02:11:13] [INFO] pipeline: >>> Running Phase 6: Robustness & Perturbation Suite...
+[2026-09-07 02:11:15] [INFO] pipeline: Saved robustness degradation report to outputs\reports\robustness_degradation.csv
+[2026-09-07 02:11:15] [INFO] pipeline: >>> Running Phase 7: Statistical Analysis & Hypothesis Testing...
+[2026-09-07 02:11:18] [INFO] pipeline: Saved bootstrap confidence intervals to outputs\reports\bootstrap_ci.csv
+[2026-09-07 02:11:18] [INFO] pipeline: Friedman Omnibus Test p-value: 0.00066 (Significant: True)
+[2026-09-07 02:11:18] [INFO] pipeline: Saved statistical comparisons to outputs\reports\statistical_comparisons.csv
+[2026-09-07 02:11:18] [INFO] pipeline: >>> Running Phase 8: Publication-Quality Plots & Research Report...
+[2026-09-07 02:11:22] [INFO] pipeline: Saved publication-quality plots to outputs\plots
+[2026-09-07 02:11:22] [INFO] pipeline: Saved comprehensive research experiment report to outputs\reports\experiment_report.md
+[2026-09-07 02:11:22] [INFO] pipeline: ======================================================================
+[2026-09-07 02:11:22] [INFO] pipeline: ALL PHASES (1 - 8) COMPLETED SUCCESSFULLY!
+[2026-09-07 02:11:22] [INFO] pipeline: ======================================================================
+[2026-09-07 02:28:38] [INFO] pipeline: ======================================================================
+[2026-09-07 02:28:38] [INFO] pipeline: DATASET-AGNOSTIC EXPLAINABLE ML PIPELINE (PHASES 1 - 6)
+[2026-09-07 02:28:38] [INFO] pipeline: ======================================================================
+[2026-09-07 02:28:38] [INFO] pipeline: Classification Mode:   BINARY
+[2026-09-07 02:28:38] [INFO] pipeline: Mutual Info Top-k:     15
+[2026-09-07 02:28:38] [INFO] pipeline: CV Folds:              5
+[2026-09-07 02:28:38] [INFO] pipeline: Benchmarking Enabled:  True
+[2026-09-07 02:28:38] [INFO] pipeline: Calibration Enabled:   True
+[2026-09-07 02:28:38] [INFO] pipeline: Explainability/SHAP:   True
+[2026-09-07 02:28:38] [INFO] pipeline: Robustness Suite:      True
+[2026-09-07 02:28:38] [INFO] pipeline: Loading CSV: cicids2017_generated_sample.csv (1.03 MB)...
+[2026-09-07 02:28:39] [INFO] pipeline: Loaded dataset total shape: 5,000 rows x 22 columns
+[2026-09-07 02:28:39] [INFO] pipeline: >>> Running Module 1: Data Preprocessing & Normalization...
+[2026-09-07 02:28:39] [INFO] pipeline: Train split: 4,000 samples | Test split: 1,000 samples
+[2026-09-07 02:28:39] [INFO] pipeline: Module 1 complete in 0.43s. Skewed features: 11
+[2026-09-07 02:28:39] [INFO] pipeline: >>> Running Module 2: Feature Selection (Top-k=15)...
+[2026-09-07 02:28:40] [INFO] pipeline: Module 2 complete in 0.52s. Selected 15 features.
+[2026-09-07 02:28:40] [INFO] pipeline: Top 5 features: ['Fwd Header Length', 'Total Fwd Packets', 'Subflow Fwd Packets', 'Flow Bytes/s', 'SYN Flag Count']
+[2026-09-07 02:28:40] [INFO] pipeline: >>> Running Module 3: Predictive Modeling Framework (Algorithm 2)...
+[2026-09-07 02:28:40] [INFO] pipeline: --- Training Model: random_forest ---
+[2026-09-07 02:28:41] [INFO] pipeline:   [random_forest] Fold 1/5 Log-Loss: 0.04751
+[2026-09-07 02:28:43] [INFO] pipeline:   [random_forest] Fold 2/5 Log-Loss: 0.02525
+[2026-09-07 02:28:44] [INFO] pipeline:   [random_forest] Fold 3/5 Log-Loss: 0.09219
+[2026-09-07 02:28:46] [INFO] pipeline:   [random_forest] Fold 4/5 Log-Loss: 0.04248
+[2026-09-07 02:28:48] [INFO] pipeline:   [random_forest] Fold 5/5 Log-Loss: 0.03098
+[2026-09-07 02:28:48] [INFO] pipeline:   [random_forest] CV Log-Loss: 0.04768 (+/- 0.02362)
+[2026-09-07 02:28:48] [INFO] pipeline:   [random_forest] Fitting final model on full training set...
+[2026-09-07 02:28:49] [INFO] pipeline:   [random_forest] Computing test prediction probabilities...
+[2026-09-07 02:28:49] [INFO] pipeline:   [random_forest] Saved model checkpoint to outputs\models\random_forest.joblib
+[2026-09-07 02:28:49] [INFO] pipeline: --- Training Model: xgboost ---
+[2026-09-07 02:28:50] [INFO] pipeline:   [xgboost] Fold 1/5 Log-Loss: 0.03687
+[2026-09-07 02:28:50] [INFO] pipeline:   [xgboost] Fold 2/5 Log-Loss: 0.02356
+[2026-09-07 02:28:51] [INFO] pipeline:   [xgboost] Fold 3/5 Log-Loss: 0.05304
+[2026-09-07 02:28:51] [INFO] pipeline:   [xgboost] Fold 4/5 Log-Loss: 0.02739
+[2026-09-07 02:28:52] [INFO] pipeline:   [xgboost] Fold 5/5 Log-Loss: 0.02201
+[2026-09-07 02:28:52] [INFO] pipeline:   [xgboost] CV Log-Loss: 0.03257 (+/- 0.01146)
+[2026-09-07 02:28:52] [INFO] pipeline:   [xgboost] Fitting final model on full training set...
+[2026-09-07 02:28:52] [INFO] pipeline:   [xgboost] Computing test prediction probabilities...
+[2026-09-07 02:28:52] [INFO] pipeline:   [xgboost] Saved model checkpoint to outputs\models\xgboost.joblib
+[2026-09-07 02:28:52] [INFO] pipeline: --- Training Model: lightgbm ---
+[2026-09-07 02:28:52] [INFO] pipeline:   [lightgbm] Fold 1/5 Log-Loss: 0.04657
+[2026-09-07 02:28:52] [INFO] pipeline:   [lightgbm] Fold 2/5 Log-Loss: 0.02420
+[2026-09-07 02:28:53] [INFO] pipeline:   [lightgbm] Fold 3/5 Log-Loss: 0.05361
+[2026-09-07 02:28:53] [INFO] pipeline:   [lightgbm] Fold 4/5 Log-Loss: 0.03244
+[2026-09-07 02:28:53] [INFO] pipeline:   [lightgbm] Fold 5/5 Log-Loss: 0.01555
+[2026-09-07 02:28:53] [INFO] pipeline:   [lightgbm] CV Log-Loss: 0.03447 (+/- 0.01400)
+[2026-09-07 02:28:53] [INFO] pipeline:   [lightgbm] Fitting final model on full training set...
+[2026-09-07 02:28:53] [INFO] pipeline:   [lightgbm] Computing test prediction probabilities...
+[2026-09-07 02:28:53] [INFO] pipeline:   [lightgbm] Saved model checkpoint to outputs\models\lightgbm.joblib
+[2026-09-07 02:28:53] [INFO] pipeline: Saved CV summary to outputs\reports\cv_training_summary.csv
+[2026-09-07 02:28:53] [INFO] pipeline: >>> Running Phase 4: Computational Efficiency Benchmarking...
+[2026-09-07 02:28:53] [INFO] pipeline: Saved computational benchmarks to outputs\reports\efficiency_benchmarks.csv
+[2026-09-07 02:28:53] [INFO] pipeline: >>> Running Phase 4: Probability Calibration Analysis (Brier, ECE, Platt, Isotonic)...
+[2026-09-07 02:28:54] [INFO] pipeline: Saved calibration analysis to outputs\reports\calibration_metrics.csv
+[2026-09-07 02:28:54] [INFO] pipeline: >>> Running Phase 5: SHAP Explainability & Explanation Stability...
+[2026-09-07 02:28:54] [INFO] pipeline:   [random_forest] SHAP additive property verified: True
+[2026-09-07 02:28:55] [INFO] pipeline:   [xgboost] SHAP additive property verified: True
+[2026-09-07 02:28:55] [INFO] pipeline:   [lightgbm] SHAP additive property verified: True
+[2026-09-07 02:28:55] [INFO] pipeline: Saved SHAP global importance to outputs\reports\shap_global_importance.csv
+[2026-09-07 02:28:55] [INFO] pipeline:   Calculating Explanation Stability across CV folds...
+[2026-09-07 02:28:58] [INFO] pipeline: Saved explanation stability summary to outputs\reports\explanation_stability.csv
+[2026-09-07 02:28:58] [INFO] pipeline: >>> Running Phase 6: Robustness & Perturbation Suite...
+[2026-09-07 02:28:59] [INFO] pipeline: Saved robustness degradation report to outputs\reports\robustness_degradation.csv
+[2026-09-07 02:28:59] [INFO] pipeline: >>> Running Phase 7: Statistical Analysis & Hypothesis Testing...
+[2026-09-07 02:29:02] [INFO] pipeline: Saved bootstrap confidence intervals to outputs\reports\bootstrap_ci.csv
+[2026-09-07 02:29:02] [INFO] pipeline: Friedman Omnibus Test p-value: 0.00066 (Significant: True)
+[2026-09-07 02:29:02] [INFO] pipeline: Saved statistical comparisons to outputs\reports\statistical_comparisons.csv
+[2026-09-07 02:29:02] [INFO] pipeline: >>> Running Phase 8: Publication-Quality Plots & Research Report...
+[2026-09-07 02:29:06] [INFO] pipeline: Saved publication-quality plots to outputs\plots
+[2026-09-07 02:29:06] [INFO] pipeline: Saved comprehensive research experiment report to outputs\reports\experiment_report.md
+[2026-09-07 02:29:06] [INFO] pipeline: ======================================================================
+[2026-09-07 02:29:06] [INFO] pipeline: ALL PHASES (1 - 8) COMPLETED SUCCESSFULLY!
+[2026-09-07 02:29:06] [INFO] pipeline: ======================================================================
+[2026-09-07 02:45:48] [INFO] pipeline: ======================================================================
+[2026-09-07 02:45:48] [INFO] pipeline: DATASET-AGNOSTIC EXPLAINABLE ML PIPELINE (PHASES 1 - 6)
+[2026-09-07 02:45:48] [INFO] pipeline: ======================================================================
+[2026-09-07 02:45:48] [INFO] pipeline: Classification Mode:   BINARY
+[2026-09-07 02:45:48] [INFO] pipeline: Mutual Info Top-k:     15
+[2026-09-07 02:45:48] [INFO] pipeline: CV Folds:              5
+[2026-09-07 02:45:48] [INFO] pipeline: Benchmarking Enabled:  True
+[2026-09-07 02:45:48] [INFO] pipeline: Calibration Enabled:   True
+[2026-09-07 02:45:48] [INFO] pipeline: Explainability/SHAP:   True
+[2026-09-07 02:45:48] [INFO] pipeline: Robustness Suite:      True
+[2026-09-07 02:45:48] [INFO] pipeline: Loading CSV: cicids2017_generated_sample.csv (1.03 MB)...
+[2026-09-07 02:45:48] [INFO] pipeline: Loaded dataset total shape: 5,000 rows x 22 columns
+[2026-09-07 02:45:48] [INFO] pipeline: >>> Running Module 1: Data Preprocessing & Normalization...
+[2026-09-07 02:45:48] [INFO] pipeline: Train split: 4,000 samples | Test split: 1,000 samples
+[2026-09-07 02:45:48] [INFO] pipeline: Module 1 complete in 0.50s. Skewed features: 11
+[2026-09-07 02:45:48] [INFO] pipeline: >>> Running Module 2: Feature Selection (Top-k=15)...
+[2026-09-07 02:45:49] [INFO] pipeline: Module 2 complete in 0.84s. Selected 15 features.
+[2026-09-07 02:45:49] [INFO] pipeline: Top 5 features: ['Fwd Header Length', 'Total Fwd Packets', 'Subflow Fwd Packets', 'Flow Bytes/s', 'SYN Flag Count']
+[2026-09-07 02:45:49] [INFO] pipeline: >>> Running Module 3: Predictive Modeling Framework (Algorithm 2)...
+[2026-09-07 02:45:49] [INFO] pipeline: --- Training Model: random_forest ---
+[2026-09-07 02:45:51] [INFO] pipeline:   [random_forest] Fold 1/5 Log-Loss: 0.04751
+[2026-09-07 02:45:52] [INFO] pipeline:   [random_forest] Fold 2/5 Log-Loss: 0.02525
+[2026-09-07 02:45:54] [INFO] pipeline:   [random_forest] Fold 3/5 Log-Loss: 0.09219
+[2026-09-07 02:45:56] [INFO] pipeline:   [random_forest] Fold 4/5 Log-Loss: 0.04248
+[2026-09-07 02:45:58] [INFO] pipeline:   [random_forest] Fold 5/5 Log-Loss: 0.03098
+[2026-09-07 02:45:58] [INFO] pipeline:   [random_forest] CV Log-Loss: 0.04768 (+/- 0.02362)
+[2026-09-07 02:45:58] [INFO] pipeline:   [random_forest] Fitting final model on full training set...
+[2026-09-07 02:45:59] [INFO] pipeline:   [random_forest] Computing test prediction probabilities...
+[2026-09-07 02:45:59] [INFO] pipeline:   [random_forest] Saved model checkpoint to outputs\models\random_forest.joblib
+[2026-09-07 02:45:59] [INFO] pipeline: --- Training Model: xgboost ---
+[2026-09-07 02:46:00] [INFO] pipeline:   [xgboost] Fold 1/5 Log-Loss: 0.03687
+[2026-09-07 02:46:00] [INFO] pipeline:   [xgboost] Fold 2/5 Log-Loss: 0.02356
+[2026-09-07 02:46:01] [INFO] pipeline:   [xgboost] Fold 3/5 Log-Loss: 0.05304
+[2026-09-07 02:46:01] [INFO] pipeline:   [xgboost] Fold 4/5 Log-Loss: 0.02739
+[2026-09-07 02:46:01] [INFO] pipeline:   [xgboost] Fold 5/5 Log-Loss: 0.02201
+[2026-09-07 02:46:01] [INFO] pipeline:   [xgboost] CV Log-Loss: 0.03257 (+/- 0.01146)
+[2026-09-07 02:46:01] [INFO] pipeline:   [xgboost] Fitting final model on full training set...
+[2026-09-07 02:46:02] [INFO] pipeline:   [xgboost] Computing test prediction probabilities...
+[2026-09-07 02:46:02] [INFO] pipeline:   [xgboost] Saved model checkpoint to outputs\models\xgboost.joblib
+[2026-09-07 02:46:02] [INFO] pipeline: --- Training Model: lightgbm ---
+[2026-09-07 02:46:02] [INFO] pipeline:   [lightgbm] Fold 1/5 Log-Loss: 0.04657
+[2026-09-07 02:46:02] [INFO] pipeline:   [lightgbm] Fold 2/5 Log-Loss: 0.02420
+[2026-09-07 02:46:03] [INFO] pipeline:   [lightgbm] Fold 3/5 Log-Loss: 0.05361
+[2026-09-07 02:46:03] [INFO] pipeline:   [lightgbm] Fold 4/5 Log-Loss: 0.03244
+[2026-09-07 02:46:03] [INFO] pipeline:   [lightgbm] Fold 5/5 Log-Loss: 0.01555
+[2026-09-07 02:46:03] [INFO] pipeline:   [lightgbm] CV Log-Loss: 0.03447 (+/- 0.01400)
+[2026-09-07 02:46:03] [INFO] pipeline:   [lightgbm] Fitting final model on full training set...
+[2026-09-07 02:46:03] [INFO] pipeline:   [lightgbm] Computing test prediction probabilities...
+[2026-09-07 02:46:03] [INFO] pipeline:   [lightgbm] Saved model checkpoint to outputs\models\lightgbm.joblib
+[2026-09-07 02:46:03] [INFO] pipeline: Saved CV summary to outputs\reports\cv_training_summary.csv
+[2026-09-07 02:46:03] [INFO] pipeline: >>> Running Phase 4: Computational Efficiency Benchmarking...
+[2026-09-07 02:46:03] [INFO] pipeline: Saved computational benchmarks to outputs\reports\efficiency_benchmarks.csv
+[2026-09-07 02:46:03] [INFO] pipeline: >>> Running Phase 4: Probability Calibration Analysis (Brier, ECE, Platt, Isotonic)...
+[2026-09-07 02:46:04] [INFO] pipeline: Saved calibration analysis to outputs\reports\calibration_metrics.csv
+[2026-09-07 02:46:04] [INFO] pipeline: >>> Running Phase 5: SHAP Explainability & Explanation Stability...
+[2026-09-07 02:46:04] [INFO] pipeline:   [random_forest] SHAP additive property verified: True
+[2026-09-07 02:46:04] [INFO] pipeline:   [xgboost] SHAP additive property verified: True
+[2026-09-07 02:46:05] [INFO] pipeline:   [lightgbm] SHAP additive property verified: True
+[2026-09-07 02:46:05] [INFO] pipeline: Saved SHAP global importance to outputs\reports\shap_global_importance.csv
+[2026-09-07 02:46:05] [INFO] pipeline:   Calculating Explanation Stability across CV folds...
+[2026-09-07 02:46:08] [INFO] pipeline: Saved explanation stability summary to outputs\reports\explanation_stability.csv
+[2026-09-07 02:46:08] [INFO] pipeline: >>> Running Phase 6: Robustness & Perturbation Suite...
+[2026-09-07 02:46:09] [INFO] pipeline: Saved robustness degradation report to outputs\reports\robustness_degradation.csv
+[2026-09-07 02:46:09] [INFO] pipeline: >>> Running Phase 7: Statistical Analysis & Hypothesis Testing...
+[2026-09-07 02:46:12] [INFO] pipeline: Saved bootstrap confidence intervals to outputs\reports\bootstrap_ci.csv
+[2026-09-07 02:46:12] [INFO] pipeline: Friedman Omnibus Test p-value: 0.00066 (Significant: True)
+[2026-09-07 02:46:12] [INFO] pipeline: Saved statistical comparisons to outputs\reports\statistical_comparisons.csv
+[2026-09-07 02:46:12] [INFO] pipeline: >>> Running Phase 8: Publication-Quality Plots & Research Report...
+[2026-09-07 02:46:17] [INFO] pipeline: Saved publication-quality plots to outputs\plots
+[2026-09-07 02:46:17] [INFO] pipeline: Saved comprehensive research experiment report to outputs\reports\experiment_report.md
+[2026-09-07 02:46:17] [INFO] pipeline: ======================================================================
+[2026-09-07 02:46:17] [INFO] pipeline: ALL PHASES (1 - 8) COMPLETED SUCCESSFULLY!
+[2026-09-07 02:46:17] [INFO] pipeline: ======================================================================
+[2026-09-07 03:00:58] [INFO] pipeline: ======================================================================
+[2026-09-07 03:00:58] [INFO] pipeline: DATASET-AGNOSTIC EXPLAINABLE ML PIPELINE (PHASES 1 - 6)
+[2026-09-07 03:00:58] [INFO] pipeline: ======================================================================
+[2026-09-07 03:00:58] [INFO] pipeline: Classification Mode:   BINARY
+[2026-09-07 03:00:58] [INFO] pipeline: Mutual Info Top-k:     15
+[2026-09-07 03:00:58] [INFO] pipeline: CV Folds:              5
+[2026-09-07 03:00:58] [INFO] pipeline: Benchmarking Enabled:  True
+[2026-09-07 03:00:58] [INFO] pipeline: Calibration Enabled:   True
+[2026-09-07 03:00:58] [INFO] pipeline: Explainability/SHAP:   True
+[2026-09-07 03:00:58] [INFO] pipeline: Robustness Suite:      True
+[2026-09-07 03:00:58] [INFO] pipeline: Loading CSV: cicids2017_generated_sample.csv (1.03 MB)...
+[2026-09-07 03:00:58] [INFO] pipeline: Loaded dataset total shape: 5,000 rows x 22 columns
+[2026-09-07 03:00:58] [INFO] pipeline: >>> Running Module 1: Data Preprocessing & Normalization...
+[2026-09-07 03:00:58] [INFO] pipeline: Train split: 4,000 samples | Test split: 1,000 samples
+[2026-09-07 03:00:58] [INFO] pipeline: Module 1 complete in 0.57s. Skewed features: 11
+[2026-09-07 03:00:58] [INFO] pipeline: >>> Running Module 2: Feature Selection (Top-k=15)...
+[2026-09-07 03:00:59] [INFO] pipeline: Module 2 complete in 0.64s. Selected 15 features.
+[2026-09-07 03:00:59] [INFO] pipeline: Top 5 features: ['Fwd Header Length', 'Total Fwd Packets', 'Subflow Fwd Packets', 'Flow Bytes/s', 'SYN Flag Count']
+[2026-09-07 03:00:59] [INFO] pipeline: >>> Running Module 3: Predictive Modeling Framework (Algorithm 2)...
+[2026-09-07 03:00:59] [INFO] pipeline: --- Training Model: random_forest ---
+[2026-09-07 03:01:00] [INFO] pipeline:   [random_forest] Fold 1/5 Log-Loss: 0.04751
+[2026-09-07 03:01:02] [INFO] pipeline:   [random_forest] Fold 2/5 Log-Loss: 0.02525
+[2026-09-07 03:01:03] [INFO] pipeline:   [random_forest] Fold 3/5 Log-Loss: 0.09219
+[2026-09-07 03:01:05] [INFO] pipeline:   [random_forest] Fold 4/5 Log-Loss: 0.04248
+[2026-09-07 03:01:07] [INFO] pipeline:   [random_forest] Fold 5/5 Log-Loss: 0.03098
+[2026-09-07 03:01:07] [INFO] pipeline:   [random_forest] CV Log-Loss: 0.04768 (+/- 0.02362)
+[2026-09-07 03:01:07] [INFO] pipeline:   [random_forest] Fitting final model on full training set...
+[2026-09-07 03:01:08] [INFO] pipeline:   [random_forest] Computing test prediction probabilities...
+[2026-09-07 03:01:08] [INFO] pipeline:   [random_forest] Saved model checkpoint to outputs\models\random_forest.joblib
+[2026-09-07 03:01:08] [INFO] pipeline: --- Training Model: xgboost ---
+[2026-09-07 03:01:09] [INFO] pipeline:   [xgboost] Fold 1/5 Log-Loss: 0.03687
+[2026-09-07 03:01:09] [INFO] pipeline:   [xgboost] Fold 2/5 Log-Loss: 0.02356
+[2026-09-07 03:01:09] [INFO] pipeline:   [xgboost] Fold 3/5 Log-Loss: 0.05304
+[2026-09-07 03:01:10] [INFO] pipeline:   [xgboost] Fold 4/5 Log-Loss: 0.02739
+[2026-09-07 03:01:10] [INFO] pipeline:   [xgboost] Fold 5/5 Log-Loss: 0.02201
+[2026-09-07 03:01:10] [INFO] pipeline:   [xgboost] CV Log-Loss: 0.03257 (+/- 0.01146)
+[2026-09-07 03:01:10] [INFO] pipeline:   [xgboost] Fitting final model on full training set...
+[2026-09-07 03:01:11] [INFO] pipeline:   [xgboost] Computing test prediction probabilities...
+[2026-09-07 03:01:11] [INFO] pipeline:   [xgboost] Saved model checkpoint to outputs\models\xgboost.joblib
+[2026-09-07 03:01:11] [INFO] pipeline: --- Training Model: lightgbm ---
+[2026-09-07 03:01:11] [INFO] pipeline:   [lightgbm] Fold 1/5 Log-Loss: 0.04657
+[2026-09-07 03:01:11] [INFO] pipeline:   [lightgbm] Fold 2/5 Log-Loss: 0.02420
+[2026-09-07 03:01:11] [INFO] pipeline:   [lightgbm] Fold 3/5 Log-Loss: 0.05361
+[2026-09-07 03:01:11] [INFO] pipeline:   [lightgbm] Fold 4/5 Log-Loss: 0.03244
+[2026-09-07 03:01:11] [INFO] pipeline:   [lightgbm] Fold 5/5 Log-Loss: 0.01555
+[2026-09-07 03:01:12] [INFO] pipeline:   [lightgbm] CV Log-Loss: 0.03447 (+/- 0.01400)
+[2026-09-07 03:01:12] [INFO] pipeline:   [lightgbm] Fitting final model on full training set...
+[2026-09-07 03:01:12] [INFO] pipeline:   [lightgbm] Computing test prediction probabilities...
+[2026-09-07 03:01:12] [INFO] pipeline:   [lightgbm] Saved model checkpoint to outputs\models\lightgbm.joblib
+[2026-09-07 03:01:12] [INFO] pipeline: Saved CV summary to outputs\reports\cv_training_summary.csv
+[2026-09-07 03:01:12] [INFO] pipeline: >>> Running Phase 4: Computational Efficiency Benchmarking...
+[2026-09-07 03:01:12] [INFO] pipeline: Saved computational benchmarks to outputs\reports\efficiency_benchmarks.csv
+[2026-09-07 03:01:12] [INFO] pipeline: >>> Running Phase 4: Probability Calibration Analysis (Brier, ECE, Platt, Isotonic)...
+[2026-09-07 03:01:12] [INFO] pipeline: Saved calibration analysis to outputs\reports\calibration_metrics.csv
+[2026-09-07 03:01:12] [INFO] pipeline: >>> Running Phase 5: SHAP Explainability & Explanation Stability...
+[2026-09-07 03:01:13] [INFO] pipeline:   [random_forest] SHAP additive property verified: True
+[2026-09-07 03:01:13] [INFO] pipeline:   [xgboost] SHAP additive property verified: True
+[2026-09-07 03:01:13] [INFO] pipeline:   [lightgbm] SHAP additive property verified: True
+[2026-09-07 03:01:13] [INFO] pipeline: Saved SHAP global importance to outputs\reports\shap_global_importance.csv
+[2026-09-07 03:01:13] [INFO] pipeline:   Calculating Explanation Stability across CV folds...
+[2026-09-07 03:01:17] [INFO] pipeline: Saved explanation stability summary to outputs\reports\explanation_stability.csv
+[2026-09-07 03:01:17] [INFO] pipeline: >>> Running Phase 6: Robustness & Perturbation Suite...
+[2026-09-07 03:01:18] [INFO] pipeline: Saved robustness degradation report to outputs\reports\robustness_degradation.csv
+[2026-09-07 03:01:18] [INFO] pipeline: >>> Running Phase 7: Statistical Analysis & Hypothesis Testing...
+[2026-09-07 03:01:21] [INFO] pipeline: Saved bootstrap confidence intervals to outputs\reports\bootstrap_ci.csv
+[2026-09-07 03:01:21] [INFO] pipeline: Friedman Omnibus Test p-value: 0.00066 (Significant: True)
+[2026-09-07 03:01:21] [INFO] pipeline: Saved statistical comparisons to outputs\reports\statistical_comparisons.csv
+[2026-09-07 03:01:21] [INFO] pipeline: >>> Running Phase 8: Publication-Quality Plots & Research Report...
+[2026-09-07 03:01:24] [INFO] pipeline: Saved publication-quality plots to outputs\plots
+[2026-09-07 03:01:24] [INFO] pipeline: Saved comprehensive research experiment report to outputs\reports\experiment_report.md
+[2026-09-07 03:01:24] [INFO] pipeline: ======================================================================
+[2026-09-07 03:01:24] [INFO] pipeline: ALL PHASES (1 - 8) COMPLETED SUCCESSFULLY!
+[2026-09-07 03:01:24] [INFO] pipeline: ======================================================================
+[2026-09-09 11:55:18] [INFO] pipeline: ======================================================================
+[2026-09-09 11:55:18] [INFO] pipeline: DATASET-AGNOSTIC EXPLAINABLE ML PIPELINE (PHASES 1 - 6)
+[2026-09-09 11:55:18] [INFO] pipeline: ======================================================================
+[2026-09-09 11:55:18] [INFO] pipeline: Classification Mode:   BINARY
+[2026-09-09 11:55:18] [INFO] pipeline: Mutual Info Top-k:     15
+[2026-09-09 11:55:18] [INFO] pipeline: CV Folds:              5
+[2026-09-09 11:55:18] [INFO] pipeline: Benchmarking Enabled:  True
+[2026-09-09 11:55:18] [INFO] pipeline: Calibration Enabled:   True
+[2026-09-09 11:55:18] [INFO] pipeline: Explainability/SHAP:   True
+[2026-09-09 11:55:18] [INFO] pipeline: Robustness Suite:      True
+[2026-09-09 11:55:18] [INFO] pipeline: Loading CSV: Wednesday-workingHours.pcap_ISCX.csv (214.74 MB)...
+[2026-09-09 11:55:38] [INFO] pipeline: Loaded dataset total shape: 692,703 rows x 79 columns
+[2026-09-09 11:55:38] [INFO] pipeline: >>> Running Module 1: Data Preprocessing & Normalization...
+[2026-09-09 11:55:58] [INFO] pipeline: Train split: 554,162 samples | Test split: 138,541 samples
+[2026-09-09 11:56:11] [INFO] pipeline: Module 1 complete in 33.11s. Skewed features: 66
+[2026-09-09 11:56:11] [INFO] pipeline: >>> Running Module 2: Feature Selection (Top-k=15)...
+[2026-09-09 11:56:44] [INFO] pipeline: Module 2 complete in 33.68s. Selected 15 features.
+[2026-09-09 11:56:44] [INFO] pipeline: Top 5 features: ['Destination Port', 'Bwd Packet Length Mean', 'Packet Length Mean', 'Average Packet Size', 'Total Length of Bwd Packets']
+[2026-09-09 11:56:44] [INFO] pipeline: >>> Running Module 3: Predictive Modeling Framework (Algorithm 2)...
+[2026-09-09 11:56:44] [INFO] pipeline: --- Training Model: random_forest ---
+[2026-09-09 11:57:14] [INFO] pipeline:   [random_forest] Fold 1/5 Log-Loss: 0.00569
+[2026-09-09 11:57:45] [INFO] pipeline:   [random_forest] Fold 2/5 Log-Loss: 0.00604
+[2026-09-09 11:58:14] [INFO] pipeline:   [random_forest] Fold 3/5 Log-Loss: 0.00594
+[2026-09-09 11:58:51] [INFO] pipeline:   [random_forest] Fold 4/5 Log-Loss: 0.00560
+[2026-09-09 11:59:26] [INFO] pipeline:   [random_forest] Fold 5/5 Log-Loss: 0.00576
+[2026-09-09 11:59:26] [INFO] pipeline:   [random_forest] CV Log-Loss: 0.00581 (+/- 0.00016)
+[2026-09-09 11:59:26] [INFO] pipeline:   [random_forest] Fitting final model on full training set...
+[2026-09-09 12:00:08] [INFO] pipeline:   [random_forest] Computing test prediction probabilities...
+[2026-09-09 12:00:09] [INFO] pipeline:   [random_forest] Saved model checkpoint to outputs\models\random_forest.joblib
+[2026-09-09 12:00:09] [INFO] pipeline: --- Training Model: xgboost ---
+[2026-09-09 12:00:16] [INFO] pipeline:   [xgboost] Fold 1/5 Log-Loss: 0.00710
+[2026-09-09 12:00:24] [INFO] pipeline:   [xgboost] Fold 2/5 Log-Loss: 0.00732
+[2026-09-09 12:00:29] [INFO] pipeline:   [xgboost] Fold 3/5 Log-Loss: 0.00717
+[2026-09-09 12:00:34] [INFO] pipeline:   [xgboost] Fold 4/5 Log-Loss: 0.00694
+[2026-09-09 12:00:41] [INFO] pipeline:   [xgboost] Fold 5/5 Log-Loss: 0.00678
+[2026-09-09 12:00:41] [INFO] pipeline:   [xgboost] CV Log-Loss: 0.00706 (+/- 0.00019)
+[2026-09-09 12:00:41] [INFO] pipeline:   [xgboost] Fitting final model on full training set...
+[2026-09-09 12:00:47] [INFO] pipeline:   [xgboost] Computing test prediction probabilities...
+[2026-09-09 12:00:47] [INFO] pipeline:   [xgboost] Saved model checkpoint to outputs\models\xgboost.joblib
+[2026-09-09 12:00:47] [INFO] pipeline: --- Training Model: lightgbm ---
+[2026-09-09 12:00:52] [INFO] pipeline:   [lightgbm] Fold 1/5 Log-Loss: 0.00698
+[2026-09-09 12:00:56] [INFO] pipeline:   [lightgbm] Fold 2/5 Log-Loss: 0.00688
+[2026-09-09 12:01:01] [INFO] pipeline:   [lightgbm] Fold 3/5 Log-Loss: 0.00740
+[2026-09-09 12:01:06] [INFO] pipeline:   [lightgbm] Fold 4/5 Log-Loss: 0.00668
+[2026-09-09 12:01:11] [INFO] pipeline:   [lightgbm] Fold 5/5 Log-Loss: 0.00644
+[2026-09-09 12:01:11] [INFO] pipeline:   [lightgbm] CV Log-Loss: 0.00688 (+/- 0.00032)
+[2026-09-09 12:01:11] [INFO] pipeline:   [lightgbm] Fitting final model on full training set...
+[2026-09-09 12:01:17] [INFO] pipeline:   [lightgbm] Computing test prediction probabilities...
+[2026-09-09 12:01:18] [INFO] pipeline:   [lightgbm] Saved model checkpoint to outputs\models\lightgbm.joblib
+[2026-09-09 12:01:18] [INFO] pipeline: Saved CV summary to outputs\reports\cv_training_summary.csv
+[2026-09-09 12:01:18] [INFO] pipeline: >>> Running Phase 4: Computational Efficiency Benchmarking...
+[2026-09-09 12:01:22] [INFO] pipeline: Saved computational benchmarks to outputs\reports\efficiency_benchmarks.csv
+[2026-09-09 12:01:22] [INFO] pipeline: >>> Running Phase 4: Probability Calibration Analysis (Brier, ECE, Platt, Isotonic)...
+[2026-09-09 12:01:29] [INFO] pipeline: Saved calibration analysis to outputs\reports\calibration_metrics.csv
+[2026-09-09 12:01:29] [INFO] pipeline: >>> Running Phase 5: SHAP Explainability & Explanation Stability...
+[2026-09-09 12:01:37] [INFO] pipeline:   [random_forest] SHAP additive property verified: True
+[2026-09-09 12:01:37] [INFO] pipeline:   [xgboost] SHAP additive property verified: True
+[2026-09-09 12:01:37] [INFO] pipeline:   [lightgbm] SHAP additive property verified: True
+[2026-09-09 12:01:38] [INFO] pipeline: Saved SHAP global importance to outputs\reports\shap_global_importance.csv
+[2026-09-09 12:01:38] [INFO] pipeline:   Calculating Explanation Stability across CV folds...
+[2026-09-09 12:02:12] [INFO] pipeline: Saved explanation stability summary to outputs\reports\explanation_stability.csv
+[2026-09-09 12:02:12] [INFO] pipeline: >>> Running Phase 6: Robustness & Perturbation Suite...
+[2026-09-09 12:02:36] [INFO] pipeline: Saved robustness degradation report to outputs\reports\robustness_degradation.csv
+[2026-09-09 12:02:36] [INFO] pipeline: >>> Running Phase 7: Statistical Analysis & Hypothesis Testing...
+[2026-09-09 12:03:44] [INFO] pipeline: Saved bootstrap confidence intervals to outputs\reports\bootstrap_ci.csv
+[2026-09-09 12:03:45] [INFO] pipeline: Friedman Omnibus Test p-value: 0.00066 (Significant: True)
+[2026-09-09 12:03:45] [INFO] pipeline: Saved statistical comparisons to outputs\reports\statistical_comparisons.csv
+[2026-09-09 12:03:45] [INFO] pipeline: >>> Running Phase 8: Publication-Quality Plots & Research Report...
+[2026-09-09 12:03:53] [INFO] pipeline: Saved publication-quality plots to outputs\plots
+[2026-09-09 12:03:54] [INFO] pipeline: Saved comprehensive research experiment report to outputs\reports\experiment_report.md
+[2026-09-09 12:03:54] [INFO] pipeline: ======================================================================
+[2026-09-09 12:03:54] [INFO] pipeline: ALL PHASES (1 - 8) COMPLETED SUCCESSFULLY!
+[2026-09-09 12:03:54] [INFO] pipeline: ======================================================================
+[2026-09-09 12:10:12] [INFO] pipeline: ======================================================================
+[2026-09-09 12:10:12] [INFO] pipeline: DATASET-AGNOSTIC EXPLAINABLE ML PIPELINE (PHASES 1 - 6)
+[2026-09-09 12:10:12] [INFO] pipeline: ======================================================================
+[2026-09-09 12:10:12] [INFO] pipeline: Classification Mode:   BINARY
+[2026-09-09 12:10:12] [INFO] pipeline: Mutual Info Top-k:     15
+[2026-09-09 12:10:12] [INFO] pipeline: CV Folds:              5
+[2026-09-09 12:10:12] [INFO] pipeline: Benchmarking Enabled:  True
+[2026-09-09 12:10:12] [INFO] pipeline: Calibration Enabled:   True
+[2026-09-09 12:10:12] [INFO] pipeline: Explainability/SHAP:   True
+[2026-09-09 12:10:12] [INFO] pipeline: Robustness Suite:      True
+[2026-09-09 12:10:12] [INFO] pipeline: Loading CSV: Wednesday-workingHours.pcap_ISCX.csv (214.74 MB)...
+[2026-09-09 12:10:26] [INFO] pipeline: Loaded dataset total shape: 692,703 rows x 79 columns
+[2026-09-09 12:10:26] [INFO] pipeline: >>> Running Module 1: Data Preprocessing & Normalization...
+[2026-09-09 12:10:40] [INFO] pipeline: Train split: 554,162 samples | Test split: 138,541 samples
+[2026-09-09 12:10:54] [INFO] pipeline: Module 1 complete in 28.19s. Skewed features: 66
+[2026-09-09 12:10:54] [INFO] pipeline: >>> Running Module 2: Feature Selection (Top-k=15)...
+[2026-09-09 12:18:52] [INFO] pipeline: ======================================================================
+[2026-09-09 12:18:52] [INFO] pipeline: DATASET-AGNOSTIC EXPLAINABLE ML PIPELINE (PHASES 1 - 6)
+[2026-09-09 12:18:52] [INFO] pipeline: ======================================================================
+[2026-09-09 12:18:52] [INFO] pipeline: Classification Mode:   MULTICLASS
+[2026-09-09 12:18:52] [INFO] pipeline: Mutual Info Top-k:     15
+[2026-09-09 12:18:52] [INFO] pipeline: CV Folds:              5
+[2026-09-09 12:18:52] [INFO] pipeline: Benchmarking Enabled:  True
+[2026-09-09 12:18:52] [INFO] pipeline: Calibration Enabled:   True
+[2026-09-09 12:18:52] [INFO] pipeline: Explainability/SHAP:   True
+[2026-09-09 12:18:52] [INFO] pipeline: Robustness Suite:      True
+[2026-09-09 12:18:52] [INFO] pipeline: Loading CSV: Wednesday-workingHours.pcap_ISCX.csv (214.74 MB)...
+[2026-09-09 12:19:01] [INFO] pipeline: Loaded dataset total shape: 692,703 rows x 79 columns
+[2026-09-09 12:19:01] [INFO] pipeline: >>> Running Module 1: Data Preprocessing & Normalization...
+[2026-09-09 12:19:10] [INFO] pipeline: Train split: 554,162 samples | Test split: 138,541 samples
+[2026-09-09 12:19:20] [INFO] pipeline: Module 1 complete in 18.27s. Skewed features: 66
+[2026-09-09 12:19:20] [INFO] pipeline: >>> Running Module 2: Feature Selection (Top-k=15)...
+[2026-09-09 12:27:52] [INFO] pipeline: ======================================================================
+[2026-09-09 12:27:52] [INFO] pipeline: DATASET-AGNOSTIC EXPLAINABLE ML PIPELINE (PHASES 1 - 6)
+[2026-09-09 12:27:52] [INFO] pipeline: ======================================================================
+[2026-09-09 12:27:52] [INFO] pipeline: Classification Mode:   MULTICLASS
+[2026-09-09 12:27:52] [INFO] pipeline: Mutual Info Top-k:     15
+[2026-09-09 12:27:52] [INFO] pipeline: CV Folds:              5
+[2026-09-09 12:27:52] [INFO] pipeline: Benchmarking Enabled:  True
+[2026-09-09 12:27:52] [INFO] pipeline: Calibration Enabled:   True
+[2026-09-09 12:27:52] [INFO] pipeline: Explainability/SHAP:   True
+[2026-09-09 12:27:52] [INFO] pipeline: Robustness Suite:      True
+[2026-09-09 12:27:52] [INFO] pipeline: Loading CSV: Wednesday-workingHours.pcap_ISCX.csv (214.74 MB)...
+[2026-09-09 12:28:06] [INFO] pipeline: Loaded dataset total shape: 692,703 rows x 79 columns
+[2026-09-09 12:28:06] [INFO] pipeline: >>> Running Module 1: Data Preprocessing & Normalization...
+[2026-09-09 12:28:16] [INFO] pipeline: Train split: 554,162 samples | Test split: 138,541 samples
+[2026-09-09 12:28:26] [INFO] pipeline: Module 1 complete in 20.26s. Skewed features: 66
+[2026-09-09 12:28:26] [INFO] pipeline: >>> Running Module 2: Feature Selection (Top-k=15)...
+[2026-09-09 12:28:51] [INFO] pipeline: Module 2 complete in 24.92s. Selected 15 features.
+[2026-09-09 12:28:51] [INFO] pipeline: Top 5 features: ['Flow IAT Max', 'Max Packet Length', 'Bwd Packet Length Mean', 'Avg Bwd Segment Size', 'Packet Length Mean']
+[2026-09-09 12:28:51] [INFO] pipeline: >>> Running Module 3: Predictive Modeling Framework (Algorithm 2)...
+[2026-09-09 12:28:51] [INFO] pipeline: --- Training Model: random_forest ---
+[2026-09-09 12:29:25] [INFO] pipeline:   [random_forest] Fold 1/5 Log-Loss: 0.03269
+[2026-09-09 12:29:58] [INFO] pipeline:   [random_forest] Fold 2/5 Log-Loss: 0.03150
+[2026-09-09 12:30:33] [INFO] pipeline:   [random_forest] Fold 3/5 Log-Loss: 0.03028
+[2026-09-09 12:31:07] [INFO] pipeline:   [random_forest] Fold 4/5 Log-Loss: 0.03280
+[2026-09-09 12:31:39] [INFO] pipeline:   [random_forest] Fold 5/5 Log-Loss: 0.03130
+[2026-09-09 12:31:39] [INFO] pipeline:   [random_forest] CV Log-Loss: 0.03171 (+/- 0.00094)
+[2026-09-09 12:31:39] [INFO] pipeline:   [random_forest] Fitting final model on full training set...
+[2026-09-09 12:32:29] [INFO] pipeline:   [random_forest] Computing test prediction probabilities...
+[2026-09-09 12:32:31] [INFO] pipeline:   [random_forest] Saved model checkpoint to outputs\models\random_forest.joblib
+[2026-09-09 12:32:31] [INFO] pipeline: --- Training Model: xgboost ---
+[2026-09-09 12:33:03] [INFO] pipeline:   [xgboost] Fold 1/5 Log-Loss: 0.03367
+[2026-09-09 12:33:32] [INFO] pipeline:   [xgboost] Fold 2/5 Log-Loss: 0.03343
+[2026-09-09 12:33:52] [INFO] pipeline:   [xgboost] Fold 3/5 Log-Loss: 0.03224
+[2026-09-09 12:34:12] [INFO] pipeline:   [xgboost] Fold 4/5 Log-Loss: 0.03404
+[2026-09-09 12:34:34] [INFO] pipeline:   [xgboost] Fold 5/5 Log-Loss: 0.03319
+[2026-09-09 12:34:34] [INFO] pipeline:   [xgboost] CV Log-Loss: 0.03331 (+/- 0.00061)
+[2026-09-09 12:34:34] [INFO] pipeline:   [xgboost] Fitting final model on full training set...
+[2026-09-09 12:35:00] [INFO] pipeline:   [xgboost] Computing test prediction probabilities...
+[2026-09-09 12:35:00] [INFO] pipeline:   [xgboost] Saved model checkpoint to outputs\models\xgboost.joblib
+[2026-09-09 12:35:00] [INFO] pipeline: --- Training Model: lightgbm ---
+[2026-09-09 12:35:16] [INFO] pipeline:   [lightgbm] Fold 1/5 Log-Loss: 7.75293
+[2026-09-09 12:35:33] [INFO] pipeline:   [lightgbm] Fold 2/5 Log-Loss: 3.12666
+[2026-09-09 12:35:53] [INFO] pipeline:   [lightgbm] Fold 3/5 Log-Loss: 13.20915
+[2026-09-09 12:36:13] [INFO] pipeline:   [lightgbm] Fold 4/5 Log-Loss: 1.00675
+[2026-09-09 12:36:28] [INFO] pipeline:   [lightgbm] Fold 5/5 Log-Loss: 2.72050
+[2026-09-09 12:36:28] [INFO] pipeline:   [lightgbm] CV Log-Loss: 5.56320 (+/- 4.42797)
+[2026-09-09 12:36:28] [INFO] pipeline:   [lightgbm] Fitting final model on full training set...
+[2026-09-09 12:36:45] [INFO] pipeline:   [lightgbm] Computing test prediction probabilities...
+[2026-09-09 12:36:48] [INFO] pipeline:   [lightgbm] Saved model checkpoint to outputs\models\lightgbm.joblib
+[2026-09-09 12:36:48] [INFO] pipeline: Saved CV summary to outputs\reports\cv_training_summary.csv
+[2026-09-09 12:36:48] [INFO] pipeline: >>> Running Phase 4: Computational Efficiency Benchmarking...
+[2026-09-09 12:36:58] [INFO] pipeline: Saved computational benchmarks to outputs\reports\efficiency_benchmarks.csv
+[2026-09-09 12:36:58] [INFO] pipeline: >>> Running Phase 4: Probability Calibration Analysis (Brier, ECE, Platt, Isotonic)...
+[2026-09-09 12:37:15] [INFO] pipeline: Saved calibration analysis to outputs\reports\calibration_metrics.csv
+[2026-09-09 12:37:15] [INFO] pipeline: >>> Running Phase 5: SHAP Explainability & Explanation Stability...
+[2026-09-09 12:37:27] [INFO] pipeline:   [random_forest] SHAP additive property verified: True
+[2026-09-09 12:37:27] [INFO] pipeline:   [xgboost] SHAP additive property verified: True
+[2026-09-09 12:37:28] [INFO] pipeline:   [lightgbm] SHAP additive property verified: True
+[2026-09-09 12:37:28] [INFO] pipeline: Saved SHAP global importance to outputs\reports\shap_global_importance.csv
+[2026-09-09 12:37:28] [INFO] pipeline:   Calculating Explanation Stability across CV folds...
+[2026-09-09 12:38:00] [INFO] pipeline: Saved explanation stability summary to outputs\reports\explanation_stability.csv
+[2026-09-09 12:38:00] [INFO] pipeline: >>> Running Phase 6: Robustness & Perturbation Suite...
+[2026-09-09 12:39:16] [INFO] pipeline: Saved robustness degradation report to outputs\reports\robustness_degradation.csv
+[2026-09-09 12:39:16] [INFO] pipeline: >>> Running Phase 7: Statistical Analysis & Hypothesis Testing...
+[2026-09-09 12:40:45] [INFO] pipeline: Saved bootstrap confidence intervals to outputs\reports\bootstrap_ci.csv
+[2026-09-09 12:40:45] [INFO] pipeline: Friedman Omnibus Test p-value: 0.00000 (Significant: True)
+[2026-09-09 12:40:45] [INFO] pipeline: Saved statistical comparisons to outputs\reports\statistical_comparisons.csv
+[2026-09-09 12:40:45] [INFO] pipeline: >>> Running Phase 8: Publication-Quality Plots & Research Report...
+[2026-09-09 12:45:58] [INFO] pipeline: ======================================================================
+[2026-09-09 12:45:58] [INFO] pipeline: DATASET-AGNOSTIC EXPLAINABLE ML PIPELINE (PHASES 1 - 6)
+[2026-09-09 12:45:58] [INFO] pipeline: ======================================================================
+[2026-09-09 12:45:58] [INFO] pipeline: Classification Mode:   MULTICLASS
+[2026-09-09 12:45:58] [INFO] pipeline: Mutual Info Top-k:     15
+[2026-09-09 12:45:58] [INFO] pipeline: CV Folds:              5
+[2026-09-09 12:45:58] [INFO] pipeline: Benchmarking Enabled:  True
+[2026-09-09 12:45:58] [INFO] pipeline: Calibration Enabled:   True
+[2026-09-09 12:45:58] [INFO] pipeline: Explainability/SHAP:   True
+[2026-09-09 12:45:58] [INFO] pipeline: Robustness Suite:      True
+[2026-09-09 12:45:58] [INFO] pipeline: Loading CSV: Wednesday-workingHours.pcap_ISCX.csv (214.74 MB)...
+[2026-09-09 12:46:07] [INFO] pipeline: Loaded dataset total shape: 692,703 rows x 79 columns
+[2026-09-09 12:46:07] [INFO] pipeline: >>> Running Module 1: Data Preprocessing & Normalization...
+[2026-09-09 12:46:15] [INFO] pipeline: Train split: 554,162 samples | Test split: 138,541 samples
+[2026-09-09 12:46:26] [INFO] pipeline: Module 1 complete in 19.00s. Skewed features: 66
+[2026-09-09 12:46:26] [INFO] pipeline: >>> Running Module 2: Feature Selection (Top-k=15)...
+[2026-09-09 12:46:51] [INFO] pipeline: Module 2 complete in 25.77s. Selected 15 features.
+[2026-09-09 12:46:51] [INFO] pipeline: Top 5 features: ['Flow IAT Max', 'Max Packet Length', 'Bwd Packet Length Mean', 'Avg Bwd Segment Size', 'Packet Length Mean']
+[2026-09-09 12:46:51] [INFO] pipeline: >>> Running Module 3: Predictive Modeling Framework (Algorithm 2)...
+[2026-09-09 12:46:51] [INFO] pipeline: --- Training Model: random_forest ---
+[2026-09-09 12:47:31] [INFO] pipeline:   [random_forest] Fold 1/5 Log-Loss: 0.03269
+[2026-09-09 12:48:11] [INFO] pipeline:   [random_forest] Fold 2/5 Log-Loss: 0.03150
+[2026-09-09 12:48:45] [INFO] pipeline:   [random_forest] Fold 3/5 Log-Loss: 0.03028
+[2026-09-09 12:49:20] [INFO] pipeline:   [random_forest] Fold 4/5 Log-Loss: 0.03280
+[2026-09-09 12:49:52] [INFO] pipeline:   [random_forest] Fold 5/5 Log-Loss: 0.03130
+[2026-09-09 12:49:52] [INFO] pipeline:   [random_forest] CV Log-Loss: 0.03171 (+/- 0.00094)
+[2026-09-09 12:49:52] [INFO] pipeline:   [random_forest] Fitting final model on full training set...
+[2026-09-09 12:50:39] [INFO] pipeline:   [random_forest] Computing test prediction probabilities...
+[2026-09-09 12:50:39] [INFO] pipeline:   [random_forest] Saved model checkpoint to outputs\models\random_forest.joblib
+[2026-09-09 12:50:39] [INFO] pipeline: --- Training Model: xgboost ---
+[2026-09-09 12:51:00] [INFO] pipeline:   [xgboost] Fold 1/5 Log-Loss: 0.03367
+[2026-09-09 12:51:20] [INFO] pipeline:   [xgboost] Fold 2/5 Log-Loss: 0.03343
+[2026-09-09 12:51:41] [INFO] pipeline:   [xgboost] Fold 3/5 Log-Loss: 0.03224
+[2026-09-09 12:52:02] [INFO] pipeline:   [xgboost] Fold 4/5 Log-Loss: 0.03404
+[2026-09-09 12:52:23] [INFO] pipeline:   [xgboost] Fold 5/5 Log-Loss: 0.03319
+[2026-09-09 12:52:23] [INFO] pipeline:   [xgboost] CV Log-Loss: 0.03331 (+/- 0.00061)
+[2026-09-09 12:52:23] [INFO] pipeline:   [xgboost] Fitting final model on full training set...
+[2026-09-09 12:53:08] [INFO] pipeline: ======================================================================
+[2026-09-09 12:53:08] [INFO] pipeline: DATASET-AGNOSTIC EXPLAINABLE ML PIPELINE (PHASES 1 - 6)
+[2026-09-09 12:53:08] [INFO] pipeline: ======================================================================
+[2026-09-09 12:53:08] [INFO] pipeline: Classification Mode:   BINARY
+[2026-09-09 12:53:08] [INFO] pipeline: Mutual Info Top-k:     15
+[2026-09-09 12:53:08] [INFO] pipeline: CV Folds:              5
+[2026-09-09 12:53:08] [INFO] pipeline: Benchmarking Enabled:  True
+[2026-09-09 12:53:08] [INFO] pipeline: Calibration Enabled:   True
+[2026-09-09 12:53:08] [INFO] pipeline: Explainability/SHAP:   True
+[2026-09-09 12:53:08] [INFO] pipeline: Robustness Suite:      True
+[2026-09-09 12:53:08] [INFO] pipeline: Loading CSV: Wednesday-workingHours.pcap_ISCX.csv (214.74 MB)...
+[2026-09-09 12:53:16] [INFO] pipeline: Loaded dataset total shape: 692,703 rows x 79 columns
+[2026-09-09 12:53:16] [INFO] pipeline: >>> Running Module 1: Data Preprocessing & Normalization...
+[2026-09-09 12:53:22] [INFO] pipeline: Train split: 554,162 samples | Test split: 138,541 samples
+[2026-09-09 12:53:29] [INFO] pipeline: Module 1 complete in 13.64s. Skewed features: 66
+[2026-09-09 12:53:29] [INFO] pipeline: >>> Running Module 2: Feature Selection (Top-k=15)...
+[2026-09-09 12:53:51] [INFO] pipeline: Module 2 complete in 21.46s. Selected 15 features.
+[2026-09-09 12:53:51] [INFO] pipeline: Top 5 features: ['Destination Port', 'Bwd Packet Length Mean', 'Packet Length Mean', 'Average Packet Size', 'Total Length of Bwd Packets']
+[2026-09-09 12:53:51] [INFO] pipeline: >>> Running Module 3: Predictive Modeling Framework (Algorithm 2)...
+[2026-09-09 12:53:51] [INFO] pipeline: --- Training Model: random_forest ---
+[2026-09-09 12:54:17] [INFO] pipeline:   [random_forest] Fold 1/5 Log-Loss: 0.00569
+[2026-09-09 12:54:43] [INFO] pipeline:   [random_forest] Fold 2/5 Log-Loss: 0.00604
+[2026-09-09 12:55:10] [INFO] pipeline:   [random_forest] Fold 3/5 Log-Loss: 0.00594
+[2026-09-09 12:55:40] [INFO] pipeline:   [random_forest] Fold 4/5 Log-Loss: 0.00560
+[2026-09-09 12:56:08] [INFO] pipeline:   [random_forest] Fold 5/5 Log-Loss: 0.00576
+[2026-09-09 12:56:08] [INFO] pipeline:   [random_forest] CV Log-Loss: 0.00581 (+/- 0.00016)
+[2026-09-09 12:56:08] [INFO] pipeline:   [random_forest] Fitting final model on full training set...
+[2026-09-09 12:56:42] [INFO] pipeline:   [random_forest] Computing test prediction probabilities...
+[2026-09-09 12:56:43] [INFO] pipeline:   [random_forest] Saved model checkpoint to outputs\models\random_forest.joblib
+[2026-09-09 12:56:43] [INFO] pipeline: --- Training Model: xgboost ---
+[2026-09-09 12:56:46] [INFO] pipeline:   [xgboost] Fold 1/5 Log-Loss: 0.00710
+[2026-09-09 12:56:50] [INFO] pipeline:   [xgboost] Fold 2/5 Log-Loss: 0.00732
+[2026-09-09 12:56:54] [INFO] pipeline:   [xgboost] Fold 3/5 Log-Loss: 0.00717
+[2026-09-09 12:56:57] [INFO] pipeline:   [xgboost] Fold 4/5 Log-Loss: 0.00694
+[2026-09-09 12:57:01] [INFO] pipeline:   [xgboost] Fold 5/5 Log-Loss: 0.00678
+[2026-09-09 12:57:01] [INFO] pipeline:   [xgboost] CV Log-Loss: 0.00706 (+/- 0.00019)
+[2026-09-09 12:57:01] [INFO] pipeline:   [xgboost] Fitting final model on full training set...
+[2026-09-09 12:57:06] [INFO] pipeline:   [xgboost] Computing test prediction probabilities...
+[2026-09-09 12:57:06] [INFO] pipeline:   [xgboost] Saved model checkpoint to outputs\models\xgboost.joblib
+[2026-09-09 12:57:06] [INFO] pipeline: --- Training Model: lightgbm ---
+[2026-09-09 12:57:09] [INFO] pipeline:   [lightgbm] Fold 1/5 Log-Loss: 0.00698
+[2026-09-09 12:57:12] [INFO] pipeline:   [lightgbm] Fold 2/5 Log-Loss: 0.00688
+[2026-09-09 12:57:15] [INFO] pipeline:   [lightgbm] Fold 3/5 Log-Loss: 0.00740
+[2026-09-09 12:57:18] [INFO] pipeline:   [lightgbm] Fold 4/5 Log-Loss: 0.00668
+[2026-09-09 12:57:22] [INFO] pipeline:   [lightgbm] Fold 5/5 Log-Loss: 0.00644
+[2026-09-09 12:57:22] [INFO] pipeline:   [lightgbm] CV Log-Loss: 0.00688 (+/- 0.00032)
+[2026-09-09 12:57:22] [INFO] pipeline:   [lightgbm] Fitting final model on full training set...
+[2026-09-09 12:57:27] [INFO] pipeline:   [lightgbm] Computing test prediction probabilities...
+[2026-09-09 12:57:27] [INFO] pipeline:   [lightgbm] Saved model checkpoint to outputs\models\lightgbm.joblib
+[2026-09-09 12:57:27] [INFO] pipeline: Saved CV summary to outputs\reports\cv_training_summary.csv
+[2026-09-09 12:57:27] [INFO] pipeline: >>> Running Phase 4: Computational Efficiency Benchmarking...
+[2026-09-09 12:57:30] [INFO] pipeline: Saved computational benchmarks to outputs\reports\efficiency_benchmarks.csv
+[2026-09-09 12:57:30] [INFO] pipeline: >>> Running Phase 4: Probability Calibration Analysis (Brier, ECE, Platt, Isotonic)...
+[2026-09-09 12:57:33] [INFO] pipeline: Saved calibration analysis to outputs\reports\calibration_metrics.csv
+[2026-09-09 12:57:33] [INFO] pipeline: >>> Running Phase 5: SHAP Explainability & Explanation Stability...
+[2026-09-09 12:57:38] [INFO] pipeline:   [random_forest] SHAP additive property verified: True
+[2026-09-09 12:57:38] [INFO] pipeline:   [xgboost] SHAP additive property verified: True
+[2026-09-09 12:57:39] [INFO] pipeline:   [lightgbm] SHAP additive property verified: True
+[2026-09-09 12:57:39] [INFO] pipeline: Saved SHAP global importance to outputs\reports\shap_global_importance.csv
+[2026-09-09 12:57:39] [INFO] pipeline:   Calculating Explanation Stability across CV folds...
+[2026-09-09 12:57:51] [INFO] pipeline: Saved explanation stability summary to outputs\reports\explanation_stability.csv
+[2026-09-09 12:57:51] [INFO] pipeline: >>> Running Phase 6: Robustness & Perturbation Suite...
+[2026-09-09 12:58:08] [INFO] pipeline: Saved robustness degradation report to outputs\reports\robustness_degradation.csv
+[2026-09-09 12:58:08] [INFO] pipeline: >>> Running Phase 7: Statistical Analysis & Hypothesis Testing...
+[2026-09-09 12:58:44] [INFO] pipeline: Saved bootstrap confidence intervals to outputs\reports\bootstrap_ci.csv
+[2026-09-09 12:58:44] [INFO] pipeline: Friedman Omnibus Test p-value: 0.00066 (Significant: True)
+[2026-09-09 12:58:44] [INFO] pipeline: Saved statistical comparisons to outputs\reports\statistical_comparisons.csv
+[2026-09-09 12:58:44] [INFO] pipeline: >>> Running Phase 8: Publication-Quality Plots & Research Report...
+[2026-09-09 12:58:48] [INFO] pipeline: Saved publication-quality plots to outputs\plots
+[2026-09-09 12:58:49] [INFO] pipeline: Saved comprehensive research experiment report to outputs\reports\experiment_report.md
+[2026-09-09 12:58:49] [INFO] pipeline: ======================================================================
+[2026-09-09 12:58:49] [INFO] pipeline: ALL PHASES (1 - 8) COMPLETED SUCCESSFULLY!
+[2026-09-09 12:58:49] [INFO] pipeline: ======================================================================
+[2026-09-09 15:00:02] [INFO] pipeline: ======================================================================
+[2026-09-09 15:00:02] [INFO] pipeline: DATASET-AGNOSTIC EXPLAINABLE ML PIPELINE (PHASES 1 - 6)
+[2026-09-09 15:00:02] [INFO] pipeline: ======================================================================
+[2026-09-09 15:00:02] [INFO] pipeline: Classification Mode:   BINARY
+[2026-09-09 15:00:02] [INFO] pipeline: Mutual Info Top-k:     15
+[2026-09-09 15:00:02] [INFO] pipeline: CV Folds:              5
+[2026-09-09 15:00:02] [INFO] pipeline: Benchmarking Enabled:  True
+[2026-09-09 15:00:02] [INFO] pipeline: Calibration Enabled:   True
+[2026-09-09 15:00:02] [INFO] pipeline: Explainability/SHAP:   True
+[2026-09-09 15:00:02] [INFO] pipeline: Robustness Suite:      True
+[2026-09-09 15:00:02] [INFO] pipeline: Loading CSV: Monday-WorkingHours.pcap_ISCX.csv (168.73 MB)...
+[2026-09-09 15:00:08] [INFO] pipeline: Loaded dataset total shape: 529,918 rows x 79 columns
+[2026-09-09 15:00:08] [INFO] pipeline: >>> Running Module 1: Data Preprocessing & Normalization...
+[2026-09-09 15:00:13] [INFO] pipeline: Train split: 423,934 samples | Test split: 105,984 samples
+[2026-09-09 15:00:20] [INFO] pipeline: Module 1 complete in 11.99s. Skewed features: 67
+[2026-09-09 15:00:20] [INFO] pipeline: >>> Running Module 2: Feature Selection (Top-k=15)...
+[2026-09-09 15:00:42] [INFO] pipeline: Module 2 complete in 21.78s. Selected 15 features.
+[2026-09-09 15:00:42] [INFO] pipeline: Top 5 features: ['Down/Up Ratio', 'min_seg_size_forward', 'ACK Flag Count', 'Destination Port', 'PSH Flag Count']
+[2026-09-09 15:00:42] [INFO] pipeline: >>> Running Module 3: Predictive Modeling Framework (Algorithm 2)...
+[2026-09-09 15:00:42] [INFO] pipeline: --- Training Model: random_forest ---
+[2026-09-09 15:01:38] [INFO] pipeline: ======================================================================
+[2026-09-09 15:01:38] [INFO] pipeline: DATASET-AGNOSTIC EXPLAINABLE ML PIPELINE (PHASES 1 - 6)
+[2026-09-09 15:01:38] [INFO] pipeline: ======================================================================
+[2026-09-09 15:01:38] [INFO] pipeline: Classification Mode:   BINARY
+[2026-09-09 15:01:38] [INFO] pipeline: Mutual Info Top-k:     15
+[2026-09-09 15:01:38] [INFO] pipeline: CV Folds:              5
+[2026-09-09 15:01:38] [INFO] pipeline: Benchmarking Enabled:  True
+[2026-09-09 15:01:38] [INFO] pipeline: Calibration Enabled:   True
+[2026-09-09 15:01:38] [INFO] pipeline: Explainability/SHAP:   True
+[2026-09-09 15:01:38] [INFO] pipeline: Robustness Suite:      True
+[2026-09-09 15:01:38] [INFO] pipeline: Loading CSV: Thursday-WorkingHours-Afternoon-Infilteration.pcap_ISCX.csv (79.25 MB)...
+[2026-09-09 15:01:41] [INFO] pipeline: Loaded dataset total shape: 288,602 rows x 79 columns
+[2026-09-09 15:01:41] [INFO] pipeline: >>> Running Module 1: Data Preprocessing & Normalization...
+[2026-09-09 15:01:43] [INFO] pipeline: Train split: 230,881 samples | Test split: 57,721 samples
+[2026-09-09 15:01:47] [INFO] pipeline: Module 1 complete in 5.86s. Skewed features: 68
+[2026-09-09 15:01:47] [INFO] pipeline: >>> Running Module 2: Feature Selection (Top-k=15)...
+[2026-09-09 15:02:20] [INFO] pipeline: Module 2 complete in 33.62s. Selected 15 features.
+[2026-09-09 15:02:20] [INFO] pipeline: Top 5 features: ['PSH Flag Count', 'Down/Up Ratio', 'min_seg_size_forward', 'Subflow Bwd Packets', 'Subflow Fwd Packets']
+[2026-09-09 15:02:20] [INFO] pipeline: >>> Running Module 3: Predictive Modeling Framework (Algorithm 2)...
+[2026-09-09 15:02:20] [INFO] pipeline: --- Training Model: random_forest ---
+[2026-09-09 15:02:27] [INFO] pipeline:   [random_forest] Fold 1/5 Log-Loss: 0.00015
+[2026-09-09 15:02:33] [INFO] pipeline:   [random_forest] Fold 2/5 Log-Loss: 0.00012
+[2026-09-09 15:02:40] [INFO] pipeline:   [random_forest] Fold 3/5 Log-Loss: 0.00015
+[2026-09-09 15:02:47] [INFO] pipeline:   [random_forest] Fold 4/5 Log-Loss: 0.00025
+[2026-09-09 15:02:54] [INFO] pipeline:   [random_forest] Fold 5/5 Log-Loss: 0.00026
+[2026-09-09 15:02:54] [INFO] pipeline:   [random_forest] CV Log-Loss: 0.00019 (+/- 0.00006)
+[2026-09-09 15:02:54] [INFO] pipeline:   [random_forest] Fitting final model on full training set...
+[2026-09-09 15:03:02] [INFO] pipeline:   [random_forest] Computing test prediction probabilities...
+[2026-09-09 15:03:03] [INFO] pipeline:   [random_forest] Saved model checkpoint to outputs\models\random_forest.joblib
+[2026-09-09 15:03:03] [INFO] pipeline: --- Training Model: xgboost ---
+[2026-09-09 15:03:04] [INFO] pipeline:   [xgboost] Fold 1/5 Log-Loss: 0.00006
+[2026-09-09 15:03:06] [INFO] pipeline:   [xgboost] Fold 2/5 Log-Loss: 0.00002
+[2026-09-09 15:03:08] [INFO] pipeline:   [xgboost] Fold 3/5 Log-Loss: 0.00003
+[2026-09-09 15:03:09] [INFO] pipeline:   [xgboost] Fold 4/5 Log-Loss: 0.00005
+[2026-09-09 15:03:10] [INFO] pipeline:   [xgboost] Fold 5/5 Log-Loss: 0.00019
+[2026-09-09 15:03:10] [INFO] pipeline:   [xgboost] CV Log-Loss: 0.00007 (+/- 0.00006)
+[2026-09-09 15:03:10] [INFO] pipeline:   [xgboost] Fitting final model on full training set...
+[2026-09-09 15:03:12] [INFO] pipeline:   [xgboost] Computing test prediction probabilities...
+[2026-09-09 15:03:12] [INFO] pipeline:   [xgboost] Saved model checkpoint to outputs\models\xgboost.joblib
+[2026-09-09 15:03:12] [INFO] pipeline: --- Training Model: lightgbm ---
+[2026-09-09 15:03:14] [INFO] pipeline:   [lightgbm] Fold 1/5 Log-Loss: 0.00421
+[2026-09-09 15:03:16] [INFO] pipeline:   [lightgbm] Fold 2/5 Log-Loss: 0.00608
+[2026-09-09 15:03:17] [INFO] pipeline:   [lightgbm] Fold 3/5 Log-Loss: 0.00920
+[2026-09-09 15:03:19] [INFO] pipeline:   [lightgbm] Fold 4/5 Log-Loss: 0.00740
+[2026-09-09 15:03:21] [INFO] pipeline:   [lightgbm] Fold 5/5 Log-Loss: 0.01087
+[2026-09-09 15:03:21] [INFO] pipeline:   [lightgbm] CV Log-Loss: 0.00755 (+/- 0.00233)
+[2026-09-09 15:03:21] [INFO] pipeline:   [lightgbm] Fitting final model on full training set...
+[2026-09-09 15:03:23] [INFO] pipeline:   [lightgbm] Computing test prediction probabilities...
+[2026-09-09 15:03:23] [INFO] pipeline:   [lightgbm] Saved model checkpoint to outputs\models\lightgbm.joblib
+[2026-09-09 15:03:23] [INFO] pipeline: Saved CV summary to outputs\reports\cv_training_summary.csv
+[2026-09-09 15:03:23] [INFO] pipeline: >>> Running Phase 4: Computational Efficiency Benchmarking...
+[2026-09-09 15:03:24] [INFO] pipeline: Saved computational benchmarks to outputs\reports\efficiency_benchmarks.csv
+[2026-09-09 15:03:24] [INFO] pipeline: >>> Running Phase 4: Probability Calibration Analysis (Brier, ECE, Platt, Isotonic)...
+[2026-09-09 15:03:26] [INFO] pipeline: Saved calibration analysis to outputs\reports\calibration_metrics.csv
+[2026-09-09 15:03:26] [INFO] pipeline: >>> Running Phase 5: SHAP Explainability & Explanation Stability...
+[2026-09-09 15:03:26] [INFO] pipeline:   [random_forest] SHAP additive property verified: True
+[2026-09-09 15:03:26] [INFO] pipeline:   [xgboost] SHAP additive property verified: True
+[2026-09-09 15:03:26] [INFO] pipeline:   [lightgbm] SHAP additive property verified: True
+[2026-09-09 15:03:26] [INFO] pipeline: Saved SHAP global importance to outputs\reports\shap_global_importance.csv
+[2026-09-09 15:03:26] [INFO] pipeline:   Calculating Explanation Stability across CV folds...
+[2026-09-09 15:03:29] [INFO] pipeline: Saved explanation stability summary to outputs\reports\explanation_stability.csv
+[2026-09-09 15:03:29] [INFO] pipeline: >>> Running Phase 6: Robustness & Perturbation Suite...
+[2026-09-09 15:03:36] [INFO] pipeline: Saved robustness degradation report to outputs\reports\robustness_degradation.csv
+[2026-09-09 15:03:36] [INFO] pipeline: >>> Running Phase 7: Statistical Analysis & Hypothesis Testing...
+[2026-09-09 15:03:48] [INFO] pipeline: Saved bootstrap confidence intervals to outputs\reports\bootstrap_ci.csv
+[2026-09-09 15:03:48] [INFO] pipeline: Friedman Omnibus Test p-value: 0.00000 (Significant: True)
+[2026-09-09 15:03:48] [INFO] pipeline: Saved statistical comparisons to outputs\reports\statistical_comparisons.csv
+[2026-09-09 15:03:48] [INFO] pipeline: >>> Running Phase 8: Publication-Quality Plots & Research Report...
+[2026-09-09 15:03:51] [INFO] pipeline: Saved publication-quality plots to outputs\plots
+[2026-09-09 15:03:51] [INFO] pipeline: Saved comprehensive research experiment report to outputs\reports\experiment_report.md
+[2026-09-09 15:03:51] [INFO] pipeline: ======================================================================
+[2026-09-09 15:03:51] [INFO] pipeline: ALL PHASES (1 - 8) COMPLETED SUCCESSFULLY!
+[2026-09-09 15:03:51] [INFO] pipeline: ======================================================================
+[2026-09-09 15:06:32] [INFO] pipeline: ======================================================================
+[2026-09-09 15:06:32] [INFO] pipeline: DATASET-AGNOSTIC EXPLAINABLE ML PIPELINE (PHASES 1 - 6)
+[2026-09-09 15:06:32] [INFO] pipeline: ======================================================================
+[2026-09-09 15:06:32] [INFO] pipeline: Classification Mode:   BINARY
+[2026-09-09 15:06:32] [INFO] pipeline: Mutual Info Top-k:     15
+[2026-09-09 15:06:32] [INFO] pipeline: CV Folds:              5
+[2026-09-09 15:06:32] [INFO] pipeline: Benchmarking Enabled:  True
+[2026-09-09 15:06:32] [INFO] pipeline: Calibration Enabled:   True
+[2026-09-09 15:06:32] [INFO] pipeline: Explainability/SHAP:   True
+[2026-09-09 15:06:32] [INFO] pipeline: Robustness Suite:      True
+[2026-09-09 15:06:32] [INFO] pipeline: Loading CSV: Wednesday-workingHours.pcap_ISCX.csv (214.74 MB)...
+[2026-09-09 15:06:41] [INFO] pipeline: Loaded dataset total shape: 692,703 rows x 79 columns
+[2026-09-09 15:06:41] [INFO] pipeline: >>> Running Module 1: Data Preprocessing & Normalization...
+[2026-09-09 15:06:47] [INFO] pipeline: Train split: 554,162 samples | Test split: 138,541 samples
+[2026-09-09 15:06:54] [INFO] pipeline: Module 1 complete in 12.77s. Skewed features: 66
+[2026-09-09 15:06:54] [INFO] pipeline: >>> Running Module 2: Feature Selection (Top-k=15)...
+[2026-09-09 15:07:17] [INFO] pipeline: Module 2 complete in 22.98s. Selected 15 features.
+[2026-09-09 15:07:17] [INFO] pipeline: Top 5 features: ['Destination Port', 'Bwd Packet Length Mean', 'Packet Length Mean', 'Average Packet Size', 'Total Length of Bwd Packets']
+[2026-09-09 15:07:17] [INFO] pipeline: >>> Running Module 3: Predictive Modeling Framework (Algorithm 2)...
+[2026-09-09 15:07:17] [INFO] pipeline: --- Training Model: random_forest ---
+[2026-09-09 15:08:12] [INFO] pipeline:   [random_forest] Fold 1/5 Log-Loss: 0.00569
+[2026-09-09 15:08:54] [INFO] pipeline:   [random_forest] Fold 2/5 Log-Loss: 0.00604
+[2026-09-09 15:09:36] [INFO] pipeline:   [random_forest] Fold 3/5 Log-Loss: 0.00594
+[2026-09-09 15:10:15] [INFO] pipeline:   [random_forest] Fold 4/5 Log-Loss: 0.00560
+[2026-09-09 15:10:56] [INFO] pipeline:   [random_forest] Fold 5/5 Log-Loss: 0.00576
+[2026-09-09 15:10:56] [INFO] pipeline:   [random_forest] CV Log-Loss: 0.00581 (+/- 0.00016)
+[2026-09-09 15:10:56] [INFO] pipeline:   [random_forest] Fitting final model on full training set...
+[2026-09-09 15:11:45] [INFO] pipeline:   [random_forest] Computing test prediction probabilities...
+[2026-09-09 15:11:46] [INFO] pipeline:   [random_forest] Saved model checkpoint to outputs\models\random_forest.joblib
+[2026-09-09 15:11:46] [INFO] pipeline: --- Training Model: xgboost ---
+[2026-09-09 15:12:09] [INFO] pipeline:   [xgboost] Fold 1/5 Log-Loss: 0.00710
+[2026-09-09 15:12:19] [INFO] pipeline:   [xgboost] Fold 2/5 Log-Loss: 0.00732
+[2026-09-09 15:12:30] [INFO] pipeline:   [xgboost] Fold 3/5 Log-Loss: 0.00717
+[2026-09-09 15:12:40] [INFO] pipeline:   [xgboost] Fold 4/5 Log-Loss: 0.00694
+[2026-09-09 15:12:49] [INFO] pipeline:   [xgboost] Fold 5/5 Log-Loss: 0.00678
+[2026-09-09 15:12:49] [INFO] pipeline:   [xgboost] CV Log-Loss: 0.00706 (+/- 0.00019)
+[2026-09-09 15:12:49] [INFO] pipeline:   [xgboost] Fitting final model on full training set...
+[2026-09-09 15:12:58] [INFO] pipeline:   [xgboost] Computing test prediction probabilities...
+[2026-09-09 15:12:58] [INFO] pipeline:   [xgboost] Saved model checkpoint to outputs\models\xgboost.joblib
+[2026-09-09 15:12:58] [INFO] pipeline: --- Training Model: lightgbm ---
+[2026-09-09 15:13:09] [INFO] pipeline:   [lightgbm] Fold 1/5 Log-Loss: 0.00698
+[2026-09-09 15:13:19] [INFO] pipeline:   [lightgbm] Fold 2/5 Log-Loss: 0.00688
+[2026-09-09 15:13:29] [INFO] pipeline:   [lightgbm] Fold 3/5 Log-Loss: 0.00740
+[2026-09-09 15:13:40] [INFO] pipeline:   [lightgbm] Fold 4/5 Log-Loss: 0.00668
+[2026-09-09 15:13:49] [INFO] pipeline:   [lightgbm] Fold 5/5 Log-Loss: 0.00644
+[2026-09-09 15:13:49] [INFO] pipeline:   [lightgbm] CV Log-Loss: 0.00688 (+/- 0.00032)
+[2026-09-09 15:13:49] [INFO] pipeline:   [lightgbm] Fitting final model on full training set...
+[2026-09-09 15:13:55] [INFO] pipeline:   [lightgbm] Computing test prediction probabilities...
+[2026-09-09 15:13:55] [INFO] pipeline:   [lightgbm] Saved model checkpoint to outputs\models\lightgbm.joblib
+[2026-09-09 15:13:55] [INFO] pipeline: Saved CV summary to outputs\reports\cv_training_summary.csv
+[2026-09-09 15:13:55] [INFO] pipeline: >>> Running Phase 4: Computational Efficiency Benchmarking...
+[2026-09-09 15:13:58] [INFO] pipeline: Saved computational benchmarks to outputs\reports\efficiency_benchmarks.csv
+[2026-09-09 15:13:58] [INFO] pipeline: >>> Running Phase 4: Probability Calibration Analysis (Brier, ECE, Platt, Isotonic)...
+[2026-09-09 15:14:03] [INFO] pipeline: Saved calibration analysis to outputs\reports\calibration_metrics.csv
+[2026-09-09 15:14:03] [INFO] pipeline: >>> Running Phase 5: SHAP Explainability & Explanation Stability...
+[2026-09-09 15:14:08] [INFO] pipeline:   [random_forest] SHAP additive property verified: True
+[2026-09-09 15:14:09] [INFO] pipeline:   [xgboost] SHAP additive property verified: True
+[2026-09-09 15:14:09] [INFO] pipeline:   [lightgbm] SHAP additive property verified: True
+[2026-09-09 15:14:09] [INFO] pipeline: Saved SHAP global importance to outputs\reports\shap_global_importance.csv
+[2026-09-09 15:14:09] [INFO] pipeline:   Calculating Explanation Stability across CV folds...
+[2026-09-09 15:14:22] [INFO] pipeline: Saved explanation stability summary to outputs\reports\explanation_stability.csv
+[2026-09-09 15:14:22] [INFO] pipeline: >>> Running Phase 6: Robustness & Perturbation Suite...
+[2026-09-09 15:14:40] [INFO] pipeline: Saved robustness degradation report to outputs\reports\robustness_degradation.csv
+[2026-09-09 15:14:40] [INFO] pipeline: >>> Running Phase 7: Statistical Analysis & Hypothesis Testing...
+[2026-09-09 15:15:29] [INFO] pipeline: Saved bootstrap confidence intervals to outputs\reports\bootstrap_ci.csv
+[2026-09-09 15:15:29] [INFO] pipeline: Friedman Omnibus Test p-value: 0.00066 (Significant: True)
+[2026-09-09 15:15:29] [INFO] pipeline: Saved statistical comparisons to outputs\reports\statistical_comparisons.csv
+[2026-09-09 15:15:29] [INFO] pipeline: >>> Running Phase 8: Publication-Quality Plots & Research Report...
+[2026-09-09 15:15:33] [INFO] pipeline: Saved publication-quality plots to outputs\plots
+[2026-09-09 15:15:34] [INFO] pipeline: Saved comprehensive research experiment report to outputs\reports\experiment_report.md
+[2026-09-09 15:15:34] [INFO] pipeline: ======================================================================
+[2026-09-09 15:15:34] [INFO] pipeline: ALL PHASES (1 - 8) COMPLETED SUCCESSFULLY!
+[2026-09-09 15:15:34] [INFO] pipeline: ======================================================================
+[2026-09-16 16:23:19] [INFO] pipeline: ======================================================================
+[2026-09-16 16:23:19] [INFO] pipeline: DATASET-AGNOSTIC EXPLAINABLE ML PIPELINE (PHASES 1 - 6)
+[2026-09-16 16:23:19] [INFO] pipeline: ======================================================================
+[2026-09-16 16:23:19] [INFO] pipeline: Classification Mode:   BINARY
+[2026-09-16 16:23:19] [INFO] pipeline: Mutual Info Top-k:     15
+[2026-09-16 16:23:19] [INFO] pipeline: CV Folds:              5
+[2026-09-16 16:23:19] [INFO] pipeline: Benchmarking Enabled:  True
+[2026-09-16 16:23:19] [INFO] pipeline: Calibration Enabled:   True
+[2026-09-16 16:23:19] [INFO] pipeline: Explainability/SHAP:   True
+[2026-09-16 16:23:19] [INFO] pipeline: Robustness Suite:      True
+[2026-09-16 16:23:19] [INFO] pipeline: Loading CSV: Wednesday-workingHours.pcap_ISCX.csv (214.74 MB)...
+[2026-09-16 16:23:30] [INFO] pipeline: Loaded dataset total shape: 692,703 rows x 79 columns
+[2026-09-16 16:23:30] [INFO] pipeline: >>> Running Module 1: Data Preprocessing & Normalization...
+[2026-09-16 16:23:38] [INFO] pipeline: Train split: 554,162 samples | Test split: 138,541 samples
+[2026-09-16 16:23:47] [INFO] pipeline: Module 1 complete in 17.10s. Skewed features: 66
+[2026-09-16 16:23:47] [INFO] pipeline: >>> Running Module 2: Feature Selection (Top-k=15)...
+[2026-09-16 16:24:12] [INFO] pipeline: Module 2 complete in 25.19s. Selected 15 features.
+[2026-09-16 16:24:12] [INFO] pipeline: Top 5 features: ['Destination Port', 'Bwd Packet Length Mean', 'Packet Length Mean', 'Average Packet Size', 'Total Length of Bwd Packets']
+[2026-09-16 16:24:12] [INFO] pipeline: >>> Running Module 3: Predictive Modeling Framework (Algorithm 2)...
+[2026-09-16 16:24:12] [INFO] pipeline: --- Training Model: random_forest ---
+[2026-09-16 16:24:45] [INFO] pipeline:   [random_forest] Fold 1/5 Log-Loss: 0.00569
+[2026-09-16 16:25:17] [INFO] pipeline:   [random_forest] Fold 2/5 Log-Loss: 0.00604
+[2026-09-16 16:25:44] [INFO] pipeline:   [random_forest] Fold 3/5 Log-Loss: 0.00594
+[2026-09-16 16:29:39] [INFO] pipeline: ======================================================================
+[2026-09-16 16:29:39] [INFO] pipeline: DATASET-AGNOSTIC EXPLAINABLE ML PIPELINE (PHASES 1 - 6)
+[2026-09-16 16:29:39] [INFO] pipeline: ======================================================================
+[2026-09-16 16:29:39] [INFO] pipeline: Classification Mode:   BINARY
+[2026-09-16 16:29:39] [INFO] pipeline: Mutual Info Top-k:     15
+[2026-09-16 16:29:39] [INFO] pipeline: CV Folds:              5
+[2026-09-16 16:29:39] [INFO] pipeline: Benchmarking Enabled:  True
+[2026-09-16 16:29:39] [INFO] pipeline: Calibration Enabled:   True
+[2026-09-16 16:29:39] [INFO] pipeline: Explainability/SHAP:   True
+[2026-09-16 16:29:39] [INFO] pipeline: Robustness Suite:      True
+[2026-09-16 16:29:39] [INFO] pipeline: Loading CSV: Wednesday-workingHours.pcap_ISCX.csv (214.74 MB)...
+[2026-09-16 16:29:47] [INFO] pipeline: Loaded dataset total shape: 692,703 rows x 79 columns
+[2026-09-16 16:29:47] [INFO] pipeline: >>> Running Module 1: Data Preprocessing & Normalization...
+[2026-09-16 16:29:53] [INFO] pipeline: Train split: 554,162 samples | Test split: 138,541 samples
+[2026-09-16 16:30:01] [INFO] pipeline: Module 1 complete in 14.00s. Skewed features: 66
+[2026-09-16 16:30:01] [INFO] pipeline: >>> Running Module 2: Feature Selection (Top-k=15)...
+[2026-09-16 16:30:57] [INFO] pipeline: Module 2 complete in 56.19s. Selected 15 features.
+[2026-09-16 16:30:57] [INFO] pipeline: Top 5 features: ['Destination Port', 'Bwd Packet Length Mean', 'Packet Length Mean', 'Average Packet Size', 'Total Length of Bwd Packets']
+[2026-09-16 16:30:57] [INFO] pipeline: >>> Running Module 3: Predictive Modeling Framework (Algorithm 2)...
+[2026-09-16 16:30:57] [INFO] pipeline: --- Training Model: random_forest ---
+[2026-09-16 16:31:38] [INFO] pipeline:   [random_forest] Fold 1/5 Log-Loss: 0.00569
+[2026-09-16 16:32:17] [INFO] pipeline:   [random_forest] Fold 2/5 Log-Loss: 0.00604
+[2026-09-16 16:32:56] [INFO] pipeline:   [random_forest] Fold 3/5 Log-Loss: 0.00594
+[2026-09-16 16:33:38] [INFO] pipeline:   [random_forest] Fold 4/5 Log-Loss: 0.00560
+[2026-09-16 16:34:15] [INFO] pipeline:   [random_forest] Fold 5/5 Log-Loss: 0.00576
+[2026-09-16 16:34:15] [INFO] pipeline:   [random_forest] CV Log-Loss: 0.00581 (+/- 0.00016)
+[2026-09-16 16:34:15] [INFO] pipeline:   [random_forest] Fitting final model on full training set...
+[2026-09-16 16:35:07] [INFO] pipeline:   [random_forest] Computing test prediction probabilities...
+[2026-09-16 16:35:08] [INFO] pipeline:   [random_forest] Saved model checkpoint to outputs\models\random_forest.joblib
+[2026-09-16 16:35:08] [INFO] pipeline: --- Training Model: xgboost ---
+[2026-09-16 16:35:15] [INFO] pipeline:   [xgboost] Fold 1/5 Log-Loss: 0.00710
+[2026-09-16 16:35:21] [INFO] pipeline:   [xgboost] Fold 2/5 Log-Loss: 0.00732
+[2026-09-16 16:35:27] [INFO] pipeline:   [xgboost] Fold 3/5 Log-Loss: 0.00717
+[2026-09-16 16:35:33] [INFO] pipeline:   [xgboost] Fold 4/5 Log-Loss: 0.00694
+[2026-09-16 16:35:38] [INFO] pipeline:   [xgboost] Fold 5/5 Log-Loss: 0.00678
+[2026-09-16 16:35:38] [INFO] pipeline:   [xgboost] CV Log-Loss: 0.00706 (+/- 0.00019)
+[2026-09-16 16:35:38] [INFO] pipeline:   [xgboost] Fitting final model on full training set...
+[2026-09-16 16:35:45] [INFO] pipeline:   [xgboost] Computing test prediction probabilities...
+[2026-09-16 16:35:45] [INFO] pipeline:   [xgboost] Saved model checkpoint to outputs\models\xgboost.joblib
+[2026-09-16 16:35:45] [INFO] pipeline: --- Training Model: lightgbm ---
+[2026-09-16 16:35:50] [INFO] pipeline:   [lightgbm] Fold 1/5 Log-Loss: 0.00698
+[2026-09-16 16:35:54] [INFO] pipeline:   [lightgbm] Fold 2/5 Log-Loss: 0.00688
+[2026-09-16 16:35:59] [INFO] pipeline:   [lightgbm] Fold 3/5 Log-Loss: 0.00740
+[2026-09-16 16:36:04] [INFO] pipeline:   [lightgbm] Fold 4/5 Log-Loss: 0.00668
+[2026-09-16 16:36:09] [INFO] pipeline:   [lightgbm] Fold 5/5 Log-Loss: 0.00644
+[2026-09-16 16:36:09] [INFO] pipeline:   [lightgbm] CV Log-Loss: 0.00688 (+/- 0.00032)
+[2026-09-16 16:36:09] [INFO] pipeline:   [lightgbm] Fitting final model on full training set...
+[2026-09-16 16:36:14] [INFO] pipeline:   [lightgbm] Computing test prediction probabilities...
+[2026-09-16 16:36:15] [INFO] pipeline:   [lightgbm] Saved model checkpoint to outputs\models\lightgbm.joblib
+[2026-09-16 16:36:15] [INFO] pipeline: Saved CV summary to outputs\reports\cv_training_summary.csv
+[2026-09-16 16:36:15] [INFO] pipeline: >>> Running Phase 4: Computational Efficiency Benchmarking...
+[2026-09-16 16:36:17] [INFO] pipeline: Saved computational benchmarks to outputs\reports\efficiency_benchmarks.csv
+[2026-09-16 16:36:17] [INFO] pipeline: >>> Running Phase 4: Probability Calibration Analysis (Brier, ECE, Platt, Isotonic)...
+[2026-09-16 16:36:24] [INFO] pipeline: Saved calibration analysis to outputs\reports\calibration_metrics.csv
+[2026-09-16 16:36:24] [INFO] pipeline: >>> Running Phase 5: SHAP Explainability & Explanation Stability...
+[2026-09-16 16:36:36] [INFO] pipeline:   [random_forest] SHAP additive property verified: True
+[2026-09-16 16:36:37] [INFO] pipeline:   [xgboost] SHAP additive property verified: True
+[2026-09-16 16:36:37] [INFO] pipeline:   [lightgbm] SHAP additive property verified: True
+[2026-09-16 16:36:37] [INFO] pipeline: Saved SHAP global importance to outputs\reports\shap_global_importance.csv
+[2026-09-16 16:36:37] [INFO] pipeline:   Calculating Explanation Stability across CV folds...
+[2026-09-16 16:36:59] [INFO] pipeline: Saved explanation stability summary to outputs\reports\explanation_stability.csv
+[2026-09-16 16:36:59] [INFO] pipeline: >>> Running Phase 6: Robustness & Perturbation Suite...
+[2026-09-16 16:37:14] [INFO] pipeline: Saved robustness degradation report to outputs\reports\robustness_degradation.csv
+[2026-09-16 16:37:14] [INFO] pipeline: >>> Running Phase 7: Statistical Analysis & Hypothesis Testing...
+[2026-09-16 16:37:47] [INFO] pipeline: Saved bootstrap confidence intervals to outputs\reports\bootstrap_ci.csv
+[2026-09-16 16:37:47] [INFO] pipeline: Friedman Omnibus Test p-value: 0.00066 (Significant: True)
+[2026-09-16 16:37:47] [INFO] pipeline: Saved statistical comparisons to outputs\reports\statistical_comparisons.csv
+[2026-09-16 16:37:47] [INFO] pipeline: >>> Running Phase 8: Publication-Quality Plots & Research Report...
+[2026-09-16 16:37:51] [INFO] pipeline: Saved publication-quality plots to outputs\plots
+[2026-09-16 16:37:52] [INFO] pipeline: Saved comprehensive research experiment report to outputs\reports\experiment_report.md
+[2026-09-16 16:37:52] [INFO] pipeline: ======================================================================
+[2026-09-16 16:37:52] [INFO] pipeline: ALL PHASES (1 - 8) COMPLETED SUCCESSFULLY!
+[2026-09-16 16:37:52] [INFO] pipeline: ======================================================================
+[2026-10-27 14:40:01] [INFO] pipeline: ======================================================================
+[2026-10-27 14:40:01] [INFO] pipeline: DATASET-AGNOSTIC EXPLAINABLE ML PIPELINE (PHASES 1 - 6)
+[2026-10-27 14:40:01] [INFO] pipeline: ======================================================================
+[2026-10-27 14:40:01] [INFO] pipeline: Classification Mode:   BINARY
+[2026-10-27 14:40:01] [INFO] pipeline: Mutual Info Top-k:     15
+[2026-10-27 14:40:01] [INFO] pipeline: CV Folds:              5
+[2026-10-27 14:40:01] [INFO] pipeline: Benchmarking Enabled:  True
+[2026-10-27 14:40:01] [INFO] pipeline: Calibration Enabled:   True
+[2026-10-27 14:40:01] [INFO] pipeline: Explainability/SHAP:   True
+[2026-10-27 14:40:01] [INFO] pipeline: Robustness Suite:      True
+[2026-10-27 14:40:01] [INFO] pipeline: Loading CSV: Wednesday-workingHours.pcap_ISCX.csv (214.74 MB)...
+[2026-10-27 14:40:12] [INFO] pipeline: Loaded dataset total shape: 692,703 rows x 79 columns
+[2026-10-27 14:40:12] [INFO] pipeline: >>> Running Module 1: Data Preprocessing & Normalization...
+[2026-10-27 14:40:20] [INFO] pipeline: Train split: 554,162 samples | Test split: 138,541 samples
+[2026-10-27 14:40:28] [INFO] pipeline: Module 1 complete in 15.84s. Skewed features: 66
+[2026-10-27 14:40:28] [INFO] pipeline: >>> Running Module 2: Feature Selection (Top-k=15)...
+[2026-10-27 14:40:51] [INFO] pipeline: Module 2 complete in 22.64s. Selected 15 features.
+[2026-10-27 14:40:51] [INFO] pipeline: Top 5 features: ['Destination Port', 'Bwd Packet Length Mean', 'Packet Length Mean', 'Average Packet Size', 'Total Length of Bwd Packets']
+[2026-10-27 14:40:51] [INFO] pipeline: >>> Running Module 3: Predictive Modeling Framework (Algorithm 2)...
+[2026-10-27 14:40:51] [INFO] pipeline: --- Training Model: random_forest ---
+[2026-10-27 14:42:24] [INFO] pipeline: ======================================================================
+[2026-10-27 14:42:24] [INFO] pipeline: DATASET-AGNOSTIC EXPLAINABLE ML PIPELINE (PHASES 1 - 6)
+[2026-10-27 14:42:24] [INFO] pipeline: ======================================================================
+[2026-10-27 14:42:24] [INFO] pipeline: Classification Mode:   BINARY
+[2026-10-27 14:42:24] [INFO] pipeline: Mutual Info Top-k:     15
+[2026-10-27 14:42:24] [INFO] pipeline: CV Folds:              5
+[2026-10-27 14:42:24] [INFO] pipeline: Benchmarking Enabled:  True
+[2026-10-27 14:42:24] [INFO] pipeline: Calibration Enabled:   True
+[2026-10-27 14:42:24] [INFO] pipeline: Explainability/SHAP:   True
+[2026-10-27 14:42:24] [INFO] pipeline: Robustness Suite:      True
+[2026-10-27 14:42:24] [INFO] pipeline: Loading CSV: Wednesday-workingHours.pcap_ISCX.csv (214.74 MB)...
+[2026-10-27 14:42:33] [INFO] pipeline: Loaded dataset total shape: 692,703 rows x 79 columns
+[2026-10-27 14:42:33] [INFO] pipeline: >>> Running Module 1: Data Preprocessing & Normalization...
+[2026-10-27 14:42:39] [INFO] pipeline: Train split: 554,162 samples | Test split: 138,541 samples
+[2026-10-27 14:44:19] [INFO] pipeline: ======================================================================
+[2026-10-27 14:44:19] [INFO] pipeline: DATASET-AGNOSTIC EXPLAINABLE ML PIPELINE (PHASES 1 - 6)
+[2026-10-27 14:44:19] [INFO] pipeline: ======================================================================
+[2026-10-27 14:44:19] [INFO] pipeline: Classification Mode:   BINARY
+[2026-10-27 14:44:19] [INFO] pipeline: Mutual Info Top-k:     15
+[2026-10-27 14:44:19] [INFO] pipeline: CV Folds:              5
+[2026-10-27 14:44:19] [INFO] pipeline: Benchmarking Enabled:  True
+[2026-10-27 14:44:19] [INFO] pipeline: Calibration Enabled:   True
+[2026-10-27 14:44:19] [INFO] pipeline: Explainability/SHAP:   True
+[2026-10-27 14:44:19] [INFO] pipeline: Robustness Suite:      True
+[2026-10-27 14:44:19] [INFO] pipeline: Loading CSV: Wednesday-workingHours.pcap_ISCX.csv (214.74 MB)...
+[2026-10-27 14:44:27] [INFO] pipeline: Loaded dataset total shape: 692,703 rows x 79 columns
+[2026-10-27 14:44:27] [INFO] pipeline: >>> Running Module 1: Data Preprocessing & Normalization...
+[2026-10-27 14:44:34] [INFO] pipeline: Train split: 554,162 samples | Test split: 138,541 samples
+[2026-10-27 14:44:41] [INFO] pipeline: Module 1 complete in 13.64s. Skewed features: 66
+[2026-10-27 14:44:41] [INFO] pipeline: >>> Running Module 2: Feature Selection (Top-k=15)...
+[2026-10-27 14:45:02] [INFO] pipeline: Module 2 complete in 21.51s. Selected 15 features.
+[2026-10-27 14:45:02] [INFO] pipeline: Top 5 features: ['Destination Port', 'Bwd Packet Length Mean', 'Packet Length Mean', 'Average Packet Size', 'Total Length of Bwd Packets']
+[2026-10-27 14:45:02] [INFO] pipeline: >>> Running Module 3: Predictive Modeling Framework (Algorithm 2)...
+[2026-10-27 14:45:02] [INFO] pipeline: --- Training Model: random_forest ---
+[2026-10-27 14:45:29] [INFO] pipeline:   [random_forest] Fold 1/5 Log-Loss: 0.00569
+[2026-10-27 14:45:57] [INFO] pipeline:   [random_forest] Fold 2/5 Log-Loss: 0.00604
+[2026-10-27 14:46:24] [INFO] pipeline:   [random_forest] Fold 3/5 Log-Loss: 0.00594
+[2026-10-27 14:46:54] [INFO] pipeline:   [random_forest] Fold 4/5 Log-Loss: 0.00560
+[2026-10-27 14:47:22] [INFO] pipeline:   [random_forest] Fold 5/5 Log-Loss: 0.00576
+[2026-10-27 14:47:22] [INFO] pipeline:   [random_forest] CV Log-Loss: 0.00581 (+/- 0.00016)
+[2026-10-27 14:47:22] [INFO] pipeline:   [random_forest] Fitting final model on full training set...
+[2026-10-27 14:47:56] [INFO] pipeline:   [random_forest] Computing test prediction probabilities...
+[2026-10-27 14:47:57] [INFO] pipeline:   [random_forest] Saved model checkpoint to outputs\models\random_forest.joblib
+[2026-10-27 14:47:57] [INFO] pipeline: --- Training Model: xgboost ---
+[2026-10-27 14:48:01] [INFO] pipeline:   [xgboost] Fold 1/5 Log-Loss: 0.00710
+[2026-10-27 14:48:05] [INFO] pipeline:   [xgboost] Fold 2/5 Log-Loss: 0.00732
+[2026-10-27 14:48:10] [INFO] pipeline:   [xgboost] Fold 3/5 Log-Loss: 0.00717
+[2026-10-27 14:48:14] [INFO] pipeline:   [xgboost] Fold 4/5 Log-Loss: 0.00694
+[2026-10-27 14:48:19] [INFO] pipeline:   [xgboost] Fold 5/5 Log-Loss: 0.00678
+[2026-10-27 14:48:19] [INFO] pipeline:   [xgboost] CV Log-Loss: 0.00706 (+/- 0.00019)
+[2026-10-27 14:48:19] [INFO] pipeline:   [xgboost] Fitting final model on full training set...
+[2026-10-27 14:48:24] [INFO] pipeline:   [xgboost] Computing test prediction probabilities...
+[2026-10-27 14:48:24] [INFO] pipeline:   [xgboost] Saved model checkpoint to outputs\models\xgboost.joblib
+[2026-10-27 14:48:24] [INFO] pipeline: --- Training Model: lightgbm ---
+[2026-10-27 14:48:28] [INFO] pipeline:   [lightgbm] Fold 1/5 Log-Loss: 0.00698
+[2026-10-27 14:48:31] [INFO] pipeline:   [lightgbm] Fold 2/5 Log-Loss: 0.00688
+[2026-10-27 14:48:34] [INFO] pipeline:   [lightgbm] Fold 3/5 Log-Loss: 0.00740
+[2026-10-27 14:48:38] [INFO] pipeline:   [lightgbm] Fold 4/5 Log-Loss: 0.00668
+[2026-10-27 14:48:41] [INFO] pipeline:   [lightgbm] Fold 5/5 Log-Loss: 0.00644
+[2026-10-27 14:48:41] [INFO] pipeline:   [lightgbm] CV Log-Loss: 0.00688 (+/- 0.00032)
+[2026-10-27 14:48:41] [INFO] pipeline:   [lightgbm] Fitting final model on full training set...
+[2026-10-27 14:48:45] [INFO] pipeline:   [lightgbm] Computing test prediction probabilities...
+[2026-10-27 14:48:45] [INFO] pipeline:   [lightgbm] Saved model checkpoint to outputs\models\lightgbm.joblib
+[2026-10-27 14:48:45] [INFO] pipeline: Saved CV summary to outputs\reports\cv_training_summary.csv
+[2026-10-27 14:48:45] [INFO] pipeline: >>> Running Phase 4: Computational Efficiency Benchmarking...
+[2026-10-27 14:48:47] [INFO] pipeline: Saved computational benchmarks to outputs\reports\efficiency_benchmarks.csv
+[2026-10-27 14:48:47] [INFO] pipeline: >>> Running Phase 4: Probability Calibration Analysis (Brier, ECE, Platt, Isotonic)...
+[2026-10-27 14:48:52] [INFO] pipeline: Saved calibration analysis to outputs\reports\calibration_metrics.csv
+[2026-10-27 14:48:52] [INFO] pipeline: >>> Running Phase 5: SHAP Explainability & Explanation Stability...
+[2026-10-27 14:48:57] [INFO] pipeline:   [random_forest] SHAP additive property verified: True
+[2026-10-27 14:48:57] [INFO] pipeline:   [xgboost] SHAP additive property verified: True
+[2026-10-27 14:48:57] [INFO] pipeline:   [lightgbm] SHAP additive property verified: True
+[2026-10-27 14:48:57] [INFO] pipeline: Saved SHAP global importance to outputs\reports\shap_global_importance.csv
+[2026-10-27 14:48:57] [INFO] pipeline:   Calculating Explanation Stability across CV folds...
+[2026-10-27 14:49:11] [INFO] pipeline: Saved explanation stability summary to outputs\reports\explanation_stability.csv
+[2026-10-27 14:49:11] [INFO] pipeline: >>> Running Phase 6: Robustness & Perturbation Suite...
+[2026-10-27 14:49:27] [INFO] pipeline: Saved robustness degradation report to outputs\reports\robustness_degradation.csv
+[2026-10-27 14:49:27] [INFO] pipeline: >>> Running Phase 7: Statistical Analysis & Hypothesis Testing...
+[2026-10-27 14:50:03] [INFO] pipeline: Saved bootstrap confidence intervals to outputs\reports\bootstrap_ci.csv
+[2026-10-27 14:50:03] [INFO] pipeline: Friedman Omnibus Test p-value: 0.00066 (Significant: True)
+[2026-10-27 14:50:03] [INFO] pipeline: Saved statistical comparisons to outputs\reports\statistical_comparisons.csv
+[2026-10-27 14:50:03] [INFO] pipeline: >>> Running Phase 8: Publication-Quality Plots & Research Report...
+[2026-10-27 14:50:07] [INFO] pipeline: Saved publication-quality plots to outputs\plots
+[2026-10-27 14:50:08] [INFO] pipeline: Saved comprehensive research experiment report to outputs\reports\experiment_report.md
+[2026-10-27 14:50:08] [INFO] pipeline: ======================================================================
+[2026-10-27 14:50:08] [INFO] pipeline: ALL PHASES (1 - 8) COMPLETED SUCCESSFULLY!
+[2026-10-27 14:50:08] [INFO] pipeline: ======================================================================

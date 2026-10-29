@@ -1,0 +1,10 @@
+Model,Calibration Method,Brier Score,ECE,Brier Improvement,ECE Improvement
+random_forest,uncalibrated,0.00132,0.00114,+0.00000,+0.00000
+random_forest,sigmoid,0.00131,0.00046,+0.00001,+0.00067
+random_forest,isotonic,0.00130,0.00021,+0.00002,+0.00092
+xgboost,uncalibrated,0.00159,0.00148,+0.00000,+0.00000
+xgboost,sigmoid,0.00154,0.00050,+0.00005,+0.00098
+xgboost,isotonic,0.00150,0.00018,+0.00008,+0.00130
+lightgbm,uncalibrated,0.00150,0.00141,+0.00000,+0.00000
+lightgbm,sigmoid,0.00145,0.00044,+0.00005,+0.00097
+lightgbm,isotonic,0.00142,0.00015,+0.00009,+0.00126

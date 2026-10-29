@@ -1,0 +1,4 @@
+Model,Mean CV Log-Loss,Std CV Log-Loss,Training Time (s)
+random_forest,0.00581,0.00016,174.42
+xgboost,0.00706,0.00019,27.04
+lightgbm,0.00688,0.00032,20.84

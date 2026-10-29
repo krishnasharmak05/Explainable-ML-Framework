@@ -1,0 +1,7 @@
+test_name,model_a,model_b,statistic,p_value,is_statistically_significant,significance_threshold,effect_size,effect_size_name,contingency_counts,interpretation
+McNemar Test,random_forest,xgboost,7.595505617977528,0.005851398303974298,True,0.05,1.8709677419354838,Odds Ratio (b/c),"{'both_correct': 138245, 'a_only': 58, 'b_only': 31, 'both_incorrect': 207}",Significant difference (p=0.0059 < 0.05) between random_forest and xgboost.
+Wilcoxon Signed-Rank Test,random_forest,xgboost,0.0,0.0625,False,0.05,0.5,Rank-Biserial Correlation (|r|),,No significant score difference (p=0.0625 >= 0.05) between random_forest and xgboost.
+McNemar Test,random_forest,lightgbm,6.011363636363637,0.014214038869082013,True,0.05,1.75,Odds Ratio (b/c),"{'both_correct': 138247, 'a_only': 56, 'b_only': 32, 'both_incorrect': 206}",Significant difference (p=0.0142 < 0.05) between random_forest and lightgbm.
+Wilcoxon Signed-Rank Test,random_forest,lightgbm,0.0,0.0625,False,0.05,0.5,Rank-Biserial Correlation (|r|),,No significant score difference (p=0.0625 >= 0.05) between random_forest and lightgbm.
+McNemar Test,xgboost,lightgbm,0.12121212121212122,0.7277235466695502,False,0.05,0.8333333333333334,Odds Ratio (b/c),"{'both_correct': 138261, 'a_only': 15, 'b_only': 18, 'both_incorrect': 247}",No statistically significant difference (p=0.7277 >= 0.05) between xgboost and lightgbm.
+Wilcoxon Signed-Rank Test,xgboost,lightgbm,2.0,0.1875,False,0.05,0.36666666666666664,Rank-Biserial Correlation (|r|),,No significant score difference (p=0.1875 >= 0.05) between xgboost and lightgbm.
